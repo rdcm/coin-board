@@ -1,10 +1,10 @@
-use crate::domain_impl::{CurrencyRate, IRatesRepository, RatesProvider};
+use crate::domain_impl::{CurrencyRate, RatesRepository, RatesProvider};
 use mongodb::bson::doc;
 use mongodb::{Client as MongoClient, Collection};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone)]
-pub struct RatesRepository {
+pub struct RatesRepositoryImpl {
     collection: Collection<ProviderRates>,
 }
 
@@ -14,7 +14,7 @@ pub struct ProviderRates {
     pub rates: Vec<CurrencyRate>,
 }
 
-impl RatesRepository {
+impl RatesRepositoryImpl {
     pub fn new(client: MongoClient, db_name: &str) -> Self {
         let collection: Collection<ProviderRates> = client.database(db_name).collection("rates");
         Self { collection }
@@ -44,7 +44,7 @@ impl RatesProvider for BinanceRatesProvider {
 }
 
 #[async_trait::async_trait]
-impl IRatesRepository for RatesRepository {
+impl RatesRepository for RatesRepositoryImpl {
     async fn insert(&self, source: String, rates: Vec<CurrencyRate>) -> Option<()> {
         let filter = doc! { "_id": &source };
         let rates = ProviderRates { _id: source, rates };

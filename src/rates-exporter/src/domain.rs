@@ -9,6 +9,6 @@ impl FetchDataQuery {
 }
 
 #[async_trait::async_trait]
-pub trait Handler {
+pub trait FetchRatesQueryHandler {
     async fn handle(&self, query: &FetchDataQuery) -> Option<()>;
 }

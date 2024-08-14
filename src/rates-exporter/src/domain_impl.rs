@@ -1,14 +1,14 @@
-use crate::domain::{FetchDataQuery, Handler};
+use crate::domain::{FetchDataQuery, FetchRatesQueryHandler};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
-pub struct FetchDataQueryHandler {
-    pub repository: Arc<dyn IRatesRepository + Send + Sync>,
+pub struct FetchRatesQueryHandlerImpl {
+    pub repository: Arc<dyn RatesRepository + Send + Sync>,
     pub rates_provider: Arc<dyn RatesProvider + Send + Sync>,
 }
 
 #[async_trait::async_trait]
-impl Handler for FetchDataQueryHandler {
+impl FetchRatesQueryHandler for FetchRatesQueryHandlerImpl {
     async fn handle(&self, query: &FetchDataQuery) -> Option<()> {
         let rates = self.rates_provider.get_rates().await?;
         self.repository
@@ -18,12 +18,12 @@ impl Handler for FetchDataQueryHandler {
     }
 }
 
-impl FetchDataQueryHandler {
+impl FetchRatesQueryHandlerImpl {
     pub fn new(
-        repository: Arc<dyn IRatesRepository + Send + Sync>,
+        repository: Arc<dyn RatesRepository + Send + Sync>,
         rates_provider: Arc<dyn RatesProvider + Send + Sync>,
     ) -> Self {
-        FetchDataQueryHandler {
+        FetchRatesQueryHandlerImpl {
             repository,
             rates_provider,
         }
@@ -37,7 +37,7 @@ pub struct CurrencyRate {
 }
 
 #[async_trait::async_trait]
-pub trait IRatesRepository {
+pub trait RatesRepository {
     async fn insert(&self, source: String, rates: Vec<CurrencyRate>) -> Option<()>;
 }
 

@@ -1,7 +1,7 @@
 use config::{Config, Environment};
+use dotenv::dotenv;
 use rates_api::service::Service;
 use rates_api::settings::Settings;
-use dotenv::dotenv;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

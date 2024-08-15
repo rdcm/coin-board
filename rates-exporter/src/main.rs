@@ -1,7 +1,7 @@
 use config::{Config, Environment};
+use dotenv::dotenv;
 use rates_exporter::service::Service;
 use rates_exporter::settings::Settings;
-use dotenv::dotenv;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -12,7 +12,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let settings: Settings = settings.try_deserialize()?;
 
-    Service::build(&settings)
+    Service::build(settings)
         .await
         .run()
         .await

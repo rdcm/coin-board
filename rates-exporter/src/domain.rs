@@ -1,10 +1,14 @@
 pub struct FetchDataQuery {
-    pub source: String,
+    pub fetch_delay_ms: u64,
+    pub page_size: i32,
 }
 
 impl FetchDataQuery {
-    pub fn new(source: String) -> Self {
-        FetchDataQuery { source }
+    pub fn new(fetch_delay_ms: u64, page_size: i32) -> Self {
+        Self {
+            fetch_delay_ms,
+            page_size,
+        }
     }
 }
 

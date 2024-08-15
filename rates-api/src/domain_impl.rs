@@ -13,12 +13,12 @@ impl GetRatesQueryHandlerImpl {
 
 #[async_trait::async_trait]
 impl GetRatesQueryHandler for GetRatesQueryHandlerImpl {
-    async fn handle(&self, query: &GetRatesQuery) -> Option<Vec<CurrencyRate>> {
-        self.repository.get_rates(query.source).await
+    async fn handle(&self, _query: &GetRatesQuery) -> Option<Vec<CurrencyRate>> {
+        self.repository.get_rates().await
     }
 }
 
 #[async_trait::async_trait]
 pub trait RatesRepository: Send + Sync + 'static {
-    async fn get_rates(&self, source: &str) -> Option<Vec<CurrencyRate>>;
+    async fn get_rates(&self) -> Option<Vec<CurrencyRate>>;
 }

@@ -6,7 +6,7 @@ use crate::settings::Settings;
 use actix_web::dev::Server;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
-use mongodb::options::{ClientOptions, ServerApi, ServerApiVersion};
+use mongodb::options::ClientOptions;
 use mongodb::Client as MongoClient;
 use std::sync::Arc;
 
@@ -16,10 +16,7 @@ pub struct Service {
 
 impl Service {
     pub async fn build(settings: &Settings) -> Self {
-        let mut client_options = ClientOptions::parse(&settings.database.uri).await.unwrap();
-        let server_api = ServerApi::builder().version(ServerApiVersion::V1).build();
-        client_options.server_api = Some(server_api);
-
+        let client_options = ClientOptions::parse(&settings.database.uri).await.unwrap();
         let client = MongoClient::with_options(client_options).unwrap();
 
         let rates_repository =

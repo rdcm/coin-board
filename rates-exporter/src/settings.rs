@@ -2,8 +2,8 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Settings {
-    pub db_settings: DbSettings,
-    pub provider_settings: ProviderSettings,
+    pub database: DbSettings,
+    pub provider: ProviderSettings,
 }
 
 #[derive(Debug, Deserialize)]

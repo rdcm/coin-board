@@ -16,22 +16,18 @@ pub struct Service {
 
 impl Service {
     pub async fn build(settings: &Settings) -> Self {
-        let mut client_options = ClientOptions::parse(&settings.db_settings.uri)
-            .await
-            .unwrap();
+        let mut client_options = ClientOptions::parse(&settings.database.uri).await.unwrap();
         let server_api = ServerApi::builder().version(ServerApiVersion::V1).build();
         client_options.server_api = Some(server_api);
 
         let client = MongoClient::with_options(client_options).unwrap();
 
-        let rates_repository = Arc::new(RatesRepositoryImpl::new(
-            client,
-            &settings.db_settings.db_name,
-        ));
+        let rates_repository =
+            Arc::new(RatesRepositoryImpl::new(client, &settings.database.db_name));
         let handler: Arc<dyn GetRatesQueryHandler> =
             Arc::new(GetRatesQueryHandlerImpl::new(rates_repository.clone()));
 
-        let addr = settings.api_settings.get_api_address();
+        let addr = settings.endpoints.get_api_address();
         let http_server = HttpServer::new(move || {
             App::new()
                 .service(get_rates)

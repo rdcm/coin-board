@@ -1,9 +1,0 @@
-{
-  "db_settings": {
-    "db_name": "coin-board",
-    "uri": "mongodb://localhost:27017/coin-board"
-  },
-  "provider_settings": {
-    "uri": "https://api.binance.com/api/v3/ticker/price"
-  }
-}

@@ -1,0 +1,40 @@
+services:
+  rates-exporter:
+    build:
+      context: .
+      dockerfile: rates-exporter/Dockerfile
+    hostname: rates-exporter
+    container_name: rates-exporter
+    image: rates-exporter:latest
+    depends_on:
+      - mongo
+    environment:
+      - RATES_EXPORTER__DATABASE__DB_NAME=coin-board-compose
+      - RATES_EXPORTER__DATABASE__URI=mongodb://mongo:27017/coin-board-compose
+      - RATES_EXPORTER__PROVIDER__URI=https://api.binance.com/api/v3/ticker/price
+      - RUST_BACKTRACE=1
+
+  rates-api:
+    build:
+      context: .
+      dockerfile: rates-api/Dockerfile
+    hostname: rates-api
+    container_name: rates-api
+    image: rates-api:latest
+    depends_on:
+      - mongo
+    ports:
+      - "7373:7373"
+    environment:
+      - RATES_API__ENDPOINTS__HOST=0.0.0.0
+      - RATES_API__ENDPOINTS__PORT=7373
+      - RATES_API__DATABASE__DB_NAME=coin-board-compose
+      - RATES_API__DATABASE__URI=mongodb://mongo:27017/coin-board-compose
+      - RUST_BACKTRACE=1
+
+  mongo:
+    hostname: mongo
+    container_name: mongo
+    image: mongo:7.0
+    ports:
+      - "27017:27017"

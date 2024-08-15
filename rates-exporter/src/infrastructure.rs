@@ -1,4 +1,4 @@
-use crate::domain_impl::{CurrencyRate, RatesRepository, RatesProvider};
+use crate::domain_impl::{CurrencyRate, RatesProvider, RatesRepository};
 use mongodb::bson::doc;
 use mongodb::{Client as MongoClient, Collection};
 use serde::{Deserialize, Serialize};

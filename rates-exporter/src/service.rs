@@ -12,17 +12,16 @@ pub struct Service {
 
 impl Service {
     pub async fn build(settings: &Settings) -> Self {
-        let mut client_options = ClientOptions::parse(&settings.db_settings.uri)
-            .await
-            .unwrap();
+        let mut client_options = ClientOptions::parse(&settings.database.uri).await.unwrap();
         let server_api = ServerApi::builder().version(ServerApiVersion::V1).build();
         client_options.server_api = Some(server_api);
 
         let client = Client::with_options(client_options).unwrap();
 
-        let repository = RatesRepositoryImpl::new(client, &settings.db_settings.db_name);
-        let rates_provider = BinanceRatesProvider::new(settings.provider_settings.uri.to_string());
-        let handler = FetchRatesQueryHandlerImpl::new(Arc::new(repository), Arc::new(rates_provider));
+        let repository = RatesRepositoryImpl::new(client, &settings.database.db_name);
+        let rates_provider = BinanceRatesProvider::new(settings.provider.uri.to_string());
+        let handler =
+            FetchRatesQueryHandlerImpl::new(Arc::new(repository), Arc::new(rates_provider));
 
         Service { handler }
     }

@@ -1,14 +1,13 @@
 [package]
-name="rates-exporter"
+name="rates-api"
 version="0.0.1"
 edition="2021"
 
 [dependencies]
-log = "0.4.20"
-env_logger = "0.11.5"
 tokio = { version = "1.33.0", features = ["full"] }
-async-trait = "0.1.81"
-mongodb = "3.0.1"
 config = "0.14.0"
 serde = { version = "1.0.207", features = ["derive"] }
-reqwest = { version = "0.12.5", features = ["json"] }
+actix-web = "4.9.0"
+async-trait = "0.1.81"
+mongodb = "3.0.1"
+dotenv = "0.15"

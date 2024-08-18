@@ -9,6 +9,7 @@ use actix_web::{App, HttpServer};
 use mongodb::options::ClientOptions;
 use mongodb::Client as MongoClient;
 use std::sync::Arc;
+use actix_cors::Cors;
 
 pub struct Service {
     server: Server,
@@ -27,6 +28,13 @@ impl Service {
         let addr = settings.endpoints.get_api_address();
         let http_server = HttpServer::new(move || {
             App::new()
+                .wrap(
+                    Cors::default()
+                        .allow_any_origin()
+                        .allow_any_method()
+                        .allow_any_header()
+                        .max_age(3600),
+                )
                 .service(get_rates)
                 .app_data(Data::from(handler.clone()))
         })

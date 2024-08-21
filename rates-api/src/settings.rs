@@ -4,6 +4,8 @@ use serde::Deserialize;
 pub struct Settings {
     pub database: DbSettings,
     pub endpoints: ApiSettings,
+    pub cors: CorsSettings
+
 }
 
 #[derive(Debug, Deserialize)]
@@ -16,6 +18,14 @@ pub struct DbSettings {
 pub struct ApiSettings {
     pub host: String,
     pub port: i32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CorsSettings {
+    pub methods: String,
+    pub origin: String,
+    pub headers: String,
+    pub max_age: usize
 }
 
 impl ApiSettings {

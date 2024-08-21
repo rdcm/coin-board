@@ -12,7 +12,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let settings: Settings = settings.try_deserialize()?;
 
-    Service::build(&settings)
+    Service::build(settings)
         .await
         .run()
         .await

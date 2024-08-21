@@ -16,7 +16,7 @@ pub struct Service {
 }
 
 impl Service {
-    pub async fn build(settings: &Settings) -> Self {
+    pub async fn build(settings: Settings) -> Self {
         let client_options = ClientOptions::parse(&settings.database.uri).await.unwrap();
         let client = MongoClient::with_options(client_options).unwrap();
 
@@ -30,10 +30,10 @@ impl Service {
             App::new()
                 .wrap(
                     Cors::default()
-                        .allow_any_origin()
-                        .allow_any_method()
-                        .allow_any_header()
-                        .max_age(3600),
+                        .allowed_origin(&settings.cors.origin)
+                        .allowed_methods(settings.cors.methods.split(' '))
+                        .allowed_headers(settings.cors.headers.split(' '))
+                        .max_age(settings.cors.max_age),
                 )
                 .service(get_rates)
                 .app_data(Data::from(handler.clone()))

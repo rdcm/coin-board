@@ -30,6 +30,10 @@ services:
       - RATES_API__ENDPOINTS__PORT=7373
       - RATES_API__DATABASE__DB_NAME=coin-board-compose
       - RATES_API__DATABASE__URI=mongodb://mongo:27017/coin-board-compose
+      - RATES_API__CORS__METHODS=GET
+      - RATES_API__CORS__HEADERS=User-Agent
+      - RATES_API__CORS__ORIGIN=http://localhost:3000
+      - RATES_API__CORS__MAX_AGE=3600
       - RUST_BACKTRACE=1
 
   mongo:

@@ -3,13 +3,13 @@ use crate::domain_impl::GetRatesQueryHandlerImpl;
 use crate::endpoints::get_rates;
 use crate::infrastructure::RatesRepositoryImpl;
 use crate::settings::Settings;
+use actix_cors::Cors;
 use actix_web::dev::Server;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 use mongodb::options::ClientOptions;
 use mongodb::Client as MongoClient;
 use std::sync::Arc;
-use actix_cors::Cors;
 
 pub struct Service {
     server: Server,

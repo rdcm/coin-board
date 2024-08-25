@@ -1,5 +1,5 @@
 # build image
-FROM rust:1.73.0-slim-buster as build
+FROM rust:1.79.0-slim-buster as build
 WORKDIR /app
 COPY . .
 
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y build-essential \
 RUN --mount=type=cache,target=/app/target cargo build --release && cp target/release/rates-api /rates-api
 
 
-# api image
+# app image
 FROM debian:buster-slim as api
 
 RUN apt-get update && apt-get install -y libssl1.1 ca-certificates

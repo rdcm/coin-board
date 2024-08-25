@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -27,15 +24,9 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and push rates-api image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./rates-api
-          push: true
-          tags: ghcr.io/${{ github.repository }}/rates-api:latest
+        run: |
+          docker buildx build --push --tag ghcr.io/${{ github.repository }}/rates-api:latest -f rates-api/Dockerfile .
 
       - name: Build and push rates-exporter image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./rates-exporter
-          push: true
-          tags: ghcr.io/${{ github.repository }}/rates-exporter:latest
+        run: |
+          docker buildx build --push --tag ghcr.io/${{ github.repository }}/rates-exporter:latest -f rates-exporter/Dockerfile .

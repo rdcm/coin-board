@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.ui.label }}-deployment
+spec:
+  replicas: {{ .Values.ui.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.ui.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.ui.label }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+      containers:
+        - name: {{ .Values.ui.label }}
+          image: "{{ .Values.ui.image.name }}:{{ .Values.ui.image.tag }}"
+          env:
+            - name: COIN_BOARD_UI_API_URL
+              value: {{ .Values.ui.backendUri }}
+          ports:
+            - containerPort: {{ .Values.ui.internalPort }}

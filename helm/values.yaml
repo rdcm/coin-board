@@ -1,5 +1,17 @@
 imagePullSecrets: github-registry
 
+ui:
+  backendUri: https://dev-wep-api.com
+  externalPort: 80
+  internalPort: 3000
+  replicas: 3
+  label: coin-board-ui
+  ingress:
+    host: dev-coin-board-ui.com
+  image:
+    name: ghcr.io/rdcm/coin-board-ui/coin-board-ui
+    tag: latest
+
 mongodb:
   label: mongodb
   replicas: 1
@@ -58,5 +70,5 @@ api:
   cors:
     methods: GET
     headers: User-Agent
-    origin: http://localhost:3000
+    origin: http://dev-coin-board-ui.com
     maxAge: 3600

@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.exporter.label }}
+spec:
+  schedule: "{{ .Values.exporter.expression }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+            - name: {{ .Values.imagePullSecrets }}
+          containers:
+            - name: {{ .Values.exporter.label }}
+              image: "{{ .Values.exporter.image.name }}:{{ .Values.exporter.image.tag }}"
+              env:
+                - name: RATES_EXPORTER__DATABASE__DB_NAME
+                  value: {{ .Values.exporter.db.name }}
+                - name: RATES_EXPORTER__DATABASE__URI
+                  value: {{ .Values.exporter.db.uri }}
+                - name: RATES_EXPORTER__PROVIDER__URI
+                  value: {{ .Values.exporter.provider.uri }}
+                - name: RATES_EXPORTER__PROVIDER__FETCH_DELAY_PER_PAGE_MS
+                  value: "{{ .Values.exporter.provider.fetchDelay }}"
+                - name: RATES_EXPORTER__PROVIDER__PAGE_SIZE
+                  value: "{{ .Values.exporter.provider.pageSize }}"
+          restartPolicy: OnFailure

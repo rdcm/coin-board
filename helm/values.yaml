@@ -1,0 +1,62 @@
+imagePullSecrets: github-registry
+
+mongodb:
+  label: mongodb
+  replicas: 1
+  weight: 2
+  port: 27017
+  image:
+    name: mongo
+    tag: latest
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  volume:
+    capacity: 1000Mi
+
+exporter:
+  db:
+    uri: mongodb://mongodb-service:27017/coin-board
+    name: coin-board
+  provider:
+    uri: https://api.coingecko.com/api/v3/coins/markets
+    fetchDelay: 10000
+    pageSize: 250
+  label: rates-exporter
+  expression: "*/15 * * * *"
+  replicas: 1
+  weight: 3
+  image:
+    name: ghcr.io/rdcm/coin-board/rates-exporter
+    tag: latest
+  pullPolicy: Never
+  resources:
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+
+api:
+  label: rates-api
+  replicas: 4
+  weight: 4
+  host: 0.0.0.0
+  port: 7373
+  image:
+    name: ghcr.io/rdcm/coin-board/rates-api
+    tag: latest
+  resources:
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+  ingress:
+    host: dev-wep-api.com
+    ingressClassName: nginx
+  mongodb:
+    uri: mongodb://mongodb-service:27017/
+    dbName: coin-board
+  cors:
+    methods: GET
+    headers: User-Agent
+    origin: http://localhost:3000
+    maxAge: 3600

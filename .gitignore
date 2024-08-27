@@ -5,3 +5,5 @@ debug/
 target/
 
 *.profraw
+tls.*
+github-registry.yaml

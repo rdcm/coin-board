@@ -4,7 +4,7 @@
 
 ## Up & Running
 
-`make secret {github_username} {github_token}` - generate k8s secret for private github registry.   
+`make secret ARGS="{github_username} {github_token}"` - generate k8s secret for private github registry.   
 `make up` - up services at k8s.   
 `make down` - down services. 
 

@@ -22,24 +22,21 @@ compose-up:
 compose-down:
 	docker compose down
 
-secret:
+create-secrets:
 	./generate_secret.sh $(ARGS) > github-registry.yaml
 
-up:
-	openssl req \
-	-x509 -newkey rsa:4096 -sha256 -nodes \
-	-keyout tls.key -out tls.crt \
-	-subj "/CN=ingress.local" -days 365
-
-	kubectl create secret tls api-secret \
-  	--cert=tls.crt \
-  	--key=tls.key
-
+deploy-secrets:
 	kubectl apply -f github-registry.yaml
 
+up:
 	helm upgrade --install --atomic --timeout 300s --wait coin-board helm
 
 down:
-	kubectl delete secret github-registry --ignore-not-found
-	kubectl delete secret api-secret --ignore-not-found
 	helm delete coin-board
+
+deploy:
+	helm upgrade --install --atomic --timeout 300s --wait coin-board helm \
+      --set ui.backendUri="https://api.coin-board.io" \
+      --set ui.ingress.host="coin-board.io" \
+      --set api.cors.origin="https://coin-board.io" \
+      --set api.ingress.host="api.coin-board.io"

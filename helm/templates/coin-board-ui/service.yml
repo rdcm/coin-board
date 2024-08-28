@@ -9,4 +9,4 @@ spec:
     - protocol: TCP
       port: {{ .Values.ui.externalPort }}
       targetPort: {{ .Values.ui.internalPort }}
-  type: LoadBalancer
+  type: ClusterIP

@@ -6,5 +6,7 @@ spec:
   selector:
     app: {{ .Values.api.label }}
   ports:
-    - port: {{ .Values.api.port }}
-      targetPort: {{ .Values.api.port }}
+    - protocol: TCP
+      port: {{ .Values.api.externalPort }}
+      targetPort: {{ .Values.api.internalPort }}
+  type: ClusterIP

@@ -9,9 +9,11 @@ services:
     depends_on:
       - mongo
     environment:
-      - RATES_EXPORTER__DATABASE__DB_NAME=coin-board-compose
-      - RATES_EXPORTER__DATABASE__URI=mongodb://mongo:27017/coin-board-compose
-      - RATES_EXPORTER__PROVIDER__URI=https://api.binance.com/api/v3/ticker/price
+      - RATES_EXPORTER__DATABASE__DB_NAME=coin-board
+      - RATES_EXPORTER__DATABASE__URI=mongodb://mongo:27017/coin-board
+      - RATES_EXPORTER__PROVIDER__URI=https://api.coingecko.com/api/v3/coins/markets
+      - RATES_EXPORTER__PROVIDER__FETCH_DELAY_PER_PAGE_MS=10000
+      - RATES_EXPORTER__PROVIDER__PAGE_SIZE=250
       - RUST_BACKTRACE=1
 
   rates-api:
@@ -28,8 +30,8 @@ services:
     environment:
       - RATES_API__ENDPOINTS__HOST=0.0.0.0
       - RATES_API__ENDPOINTS__PORT=7373
-      - RATES_API__DATABASE__DB_NAME=coin-board-compose
-      - RATES_API__DATABASE__URI=mongodb://mongo:27017/coin-board-compose
+      - RATES_API__DATABASE__DB_NAME=coin-board
+      - RATES_API__DATABASE__URI=mongodb://mongo:27017/coin-board
       - RATES_API__CORS__METHODS=GET
       - RATES_API__CORS__HEADERS=User-Agent
       - RATES_API__CORS__ORIGIN=http://localhost:3000

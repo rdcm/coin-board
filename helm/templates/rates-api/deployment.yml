@@ -5,6 +5,7 @@ metadata:
   annotations:
     "helm.sh/hook-weight": "{{ .Values.api.weight }}"
 spec:
+  replicas: {{ .Values.api.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.api.label }}
@@ -34,10 +35,10 @@ spec:
             - name: RATES_API__ENDPOINTS__HOST
               value: {{ .Values.api.host }}
             - name: RATES_API__ENDPOINTS__PORT
-              value: "{{ .Values.api.port }}"
+              value: "{{ .Values.api.internalPort }}"
           resources:
             limits:
               memory: {{ .Values.api.resources.limits.memory }}
               cpu: {{ .Values.api.resources.limits.cpu }}
           ports:
-            - containerPort: {{ .Values.api.port }}
+            - containerPort: {{ .Values.api.internalPort }}

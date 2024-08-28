@@ -3,8 +3,15 @@ kind: Ingress
 metadata:
   name: {{ .Values.ui.label }}-ingress
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.ui.ingress.host }}
+      secretName: {{ .Values.ui.label }}-tls
   rules:
     - host: {{ .Values.ui.ingress.host }}
       http:

@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.ui.label }}-deployment
+  annotations:
+    "helm.sh/hook-weight": "{{ .Values.ui.weight }}"
 spec:
   replicas: {{ .Values.ui.replicas }}
   selector:
@@ -20,5 +22,9 @@ spec:
           env:
             - name: COIN_BOARD_UI_API_URL
               value: {{ .Values.ui.backendUri }}
+          resources:
+            limits:
+              memory: {{ .Values.ui.resources.limits.memory }}
+              cpu: {{ .Values.ui.resources.limits.cpu }}
           ports:
             - containerPort: {{ .Values.ui.internalPort }}

@@ -1,16 +1,21 @@
 imagePullSecrets: github-registry
 
 ui:
-  backendUri: https://dev-wep-api.com
+  backendUri: http://localhost:7373
   externalPort: 80
   internalPort: 3000
-  replicas: 3
+  replicas: 1
+  weight: 4
   label: coin-board-ui
   ingress:
     host: dev-coin-board-ui.com
   image:
     name: ghcr.io/rdcm/coin-board-ui/coin-board-ui
     tag: latest
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "250m"
 
 mongodb:
   label: mongodb
@@ -23,7 +28,7 @@ mongodb:
   resources:
     limits:
       memory: "512Mi"
-      cpu: "500m"
+      cpu: "50m"
   volume:
     capacity: 1000Mi
 
@@ -46,21 +51,22 @@ exporter:
   resources:
     limits:
       memory: "128Mi"
-      cpu: "500m"
+      cpu: "50m"
 
 api:
   label: rates-api
-  replicas: 4
+  replicas: 1
   weight: 4
   host: 0.0.0.0
-  port: 7373
+  externalPort: 80
+  internalPort: 7373
   image:
     name: ghcr.io/rdcm/coin-board/rates-api
     tag: latest
   resources:
     limits:
       memory: "128Mi"
-      cpu: "500m"
+      cpu: "50m"
   ingress:
     host: dev-wep-api.com
     ingressClassName: nginx
@@ -70,5 +76,5 @@ api:
   cors:
     methods: GET
     headers: User-Agent
-    origin: http://dev-coin-board-ui.com
+    origin: http://localhost:3000
     maxAge: 3600

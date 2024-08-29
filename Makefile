@@ -29,14 +29,10 @@ deploy-secrets:
 	kubectl apply -f github-registry.yaml
 
 up:
-	helm upgrade --install --atomic --timeout 300s --wait coin-board helm
+	helm upgrade --install --atomic --timeout 300s --wait coin-board helm -f ./helm/values/dev.yml
 
 down:
 	helm delete coin-board
 
 deploy:
-	helm upgrade --install --atomic --timeout 300s --wait coin-board helm \
-      --set ui.backendUri="https://api.coin-board.io" \
-      --set ui.ingress.host="coin-board.io" \
-      --set api.cors.origin="https://coin-board.io" \
-      --set api.ingress.host="api.coin-board.io"
+	helm upgrade --install --atomic --timeout 300s --wait coin-board helm -f ./helm/values/prod.yml

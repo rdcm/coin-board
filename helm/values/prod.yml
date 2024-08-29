@@ -1,0 +1,16 @@
+env: prod
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+ui:
+  backendUri: "https://api.coin-board.io"
+  ingress:
+    host: "coin-board.io"
+api:
+  cors:
+    origin: "https://coin-board.io"
+  ingress:
+    host: "api.coin-board.io"
+

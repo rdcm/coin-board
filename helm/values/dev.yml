@@ -1,0 +1,11 @@
+env: dev
+
+ui:
+  backendUri: "http://localhost:7373"
+  ingress:
+    host: "localhost"
+api:
+  cors:
+    origin: "http://localhost:3000"
+  ingress:
+    host: "localhost"

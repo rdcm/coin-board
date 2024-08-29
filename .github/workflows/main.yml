@@ -2,11 +2,8 @@ name: Build and Publish Docker Images
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build-and-push:
@@ -26,10 +23,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - name: Extract version from tag
+        id: extract_tag
+        run: echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Build and push rates-api image
         run: |
-          docker buildx build --push --tag ghcr.io/${{ github.repository }}/rates-api:latest -f rates-api/Dockerfile .
+          docker buildx build --push --tag ghcr.io/${{ github.repository }}/rates-api:${{ env.TAG_VERSION }} -f rates-api/Dockerfile .
 
       - name: Build and push rates-exporter image
         run: |
-          docker buildx build --push --tag ghcr.io/${{ github.repository }}/rates-exporter:latest -f rates-exporter/Dockerfile .
+          docker buildx build --push --tag ghcr.io/${{ github.repository }}/rates-exporter:${{ env.TAG_VERSION }} -f rates-exporter/Dockerfile .

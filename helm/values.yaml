@@ -40,10 +40,10 @@ exporter:
     name: coin-board
   provider:
     uri: https://api.coingecko.com/api/v3/coins/markets
-    fetchDelay: 10000
+    fetchDelay: 30000
     pageSize: 250
   label: rates-exporter
-  expression: "*/15 * * * *"
+  expression: "0 * * * *" # every hour at minute 0
   replicas: 1
   weight: 3
   image:

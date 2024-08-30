@@ -20,7 +20,6 @@ mongodb:
   replicas: 1
   weight: 2
   port: 27017
-  storageClassName: ""
   image:
     name: mongo
     tag: latest

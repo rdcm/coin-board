@@ -11,4 +11,4 @@ api:
     host: "localhost"
 
 mongodb:
-  storageClassName: ""
+  storageClassName: "hostpath"

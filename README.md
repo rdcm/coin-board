@@ -4,7 +4,7 @@
 
 1. `make create-secrets ARGS="{github_username} {github_token}"`.
 2. `make deploy-secrets` - deploy `github-registry.yaml` to k8s for pulling private images
-3. `make up` - up services at k8s.
+3. `make deploy-dev` - deploying applications to local context
 
 ## Local::Endpoints
 
@@ -35,7 +35,7 @@ spec:
           ingress:
             class: nginx
 ```
-4. `make deploy` deploying application
+4. `make deploy-prod` deploying applications to production context
 
 ## Digitalocean::Endpoints
 

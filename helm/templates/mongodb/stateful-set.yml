@@ -30,7 +30,12 @@ spec:
             limits:
               memory: {{ .Values.mongodb.resources.limits.memory }}
               cpu: {{ .Values.mongodb.resources.limits.cpu }}
-      volumes:
-        - name: {{ .Values.mongodb.label }}-data
-          persistentVolumeClaim:
-            claimName: {{ .Values.mongodb.label }}-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.mongodb.label }}-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.volume.capacity }}
+        storageClassName: {{ .Values.mongodb.storageClassName }}

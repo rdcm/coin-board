@@ -11,5 +11,4 @@ api:
     host: "localhost"
 
 mongodb:
-  provisioner: docker.io/hostpath
   storageClassName: ""

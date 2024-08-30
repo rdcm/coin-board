@@ -44,6 +44,8 @@ exporter:
     pageSize: 250
   label: rates-exporter
   expression: "0 * * * *" # every hour at minute 0
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 3
   replicas: 1
   weight: 3
   image:

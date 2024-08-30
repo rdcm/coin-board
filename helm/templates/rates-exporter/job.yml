@@ -4,6 +4,8 @@ metadata:
   name: {{ .Values.exporter.label }}
 spec:
   schedule: "{{ .Values.exporter.expression }}"
+  failedJobsHistoryLimit: {{ .Values.exporter.failedJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ .Values.exporter.successfulJobsHistoryLimit }}
   jobTemplate:
     spec:
       template:

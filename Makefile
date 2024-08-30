@@ -36,3 +36,6 @@ down:
 
 deploy:
 	helm upgrade --install --atomic --timeout 300s --wait coin-board helm -f ./helm/values/prod.yml
+
+export:
+	kubectl create job --from=cronjob/rates-exporter rates-exporter

@@ -1,8 +1,4 @@
 env: prod
-ingress:
-  annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 
 ui:
   backendUri: "https://api.coin-board.io"
@@ -14,3 +10,6 @@ api:
   ingress:
     host: "api.coin-board.io"
 
+mongodb:
+  provisioner: dobs.csi.digitalocean.com
+  storageClassName: do-block-storage

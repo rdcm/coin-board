@@ -20,13 +20,17 @@ mongodb:
   replicas: 1
   weight: 2
   port: 27017
+  storageClassName: ""
   image:
     name: mongo
     tag: latest
   resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
     limits:
       memory: "512Mi"
-      cpu: "50m"
+      cpu: "500m"
   volume:
     capacity: 1000Mi
 

@@ -9,3 +9,7 @@ api:
     origin: "http://localhost:3000"
   ingress:
     host: "localhost"
+
+mongodb:
+  provisioner: docker.io/hostpath
+  storageClassName: ""

@@ -9,7 +9,7 @@ ui:
   label: coin-board-ui
   image:
     name: ghcr.io/rdcm/coin-board-ui/coin-board-ui
-    tag: v1.0.1
+    tag: v1.0.2
   resources:
     limits:
       memory: "512Mi"
@@ -49,7 +49,7 @@ exporter:
   weight: 3
   image:
     name: ghcr.io/rdcm/coin-board/rates-exporter
-    tag: v1.0.0
+    tag: v1.0.1
   pullPolicy: Never
   resources:
     limits:
@@ -65,7 +65,7 @@ api:
   internalPort: 7373
   image:
     name: ghcr.io/rdcm/coin-board/rates-api
-    tag: v1.0.0
+    tag: v1.0.1
   resources:
     limits:
       memory: "128Mi"

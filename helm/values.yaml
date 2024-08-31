@@ -9,7 +9,7 @@ ui:
   label: coin-board-ui
   image:
     name: ghcr.io/rdcm/coin-board-ui/coin-board-ui
-    tag: v1.0.2
+    tag: v1.0.3
   resources:
     limits:
       memory: "512Mi"

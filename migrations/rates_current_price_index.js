@@ -1,1 +1,1 @@
-db.rates.createIndex( { "current_price": 1 }, { unique: true } );
+db.rates.createIndex({ "current_price": 1 });

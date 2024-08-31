@@ -1,1 +1,0 @@
-db.rates.createIndex( { "id": 1 }, { unique: true } );

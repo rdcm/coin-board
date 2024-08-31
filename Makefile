@@ -13,13 +13,13 @@ run-api:
 run-exporter:
 	./target/debug/rates-exporter
 
-compose-build:
+docker-build:
 	DOCKER_BUILDKIT=1 docker compose build --progress=plain
 
-compose-up:
+docker-up:
 	docker compose up -d
 
-compose-down:
+docker-down:
 	docker compose down
 
 create-secrets:

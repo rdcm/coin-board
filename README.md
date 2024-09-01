@@ -1,8 +1,10 @@
 ## Up & Running
 
+`make help` - for getting full list of commands  
+
 ## Local
 
-1. `make create-secrets ARGS="{github_username} {github_token}"`.
+1. `make create-secrets username={github_username} token={github_token}`
 2. `make deploy-secrets` - deploy `github-registry.yaml` to k8s for pulling private images
 3. `make deploy-dev` - deploying applications to local context
 

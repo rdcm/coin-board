@@ -1,15 +1,5 @@
 pub struct FetchDataQuery {
-    pub fetch_delay_ms: u64,
-    pub page_size: i32,
-}
-
-impl FetchDataQuery {
-    pub fn new(fetch_delay_ms: u64, page_size: i32) -> Self {
-        Self {
-            fetch_delay_ms,
-            page_size,
-        }
-    }
+    pub coins_ids: String,
 }
 
 #[async_trait::async_trait]

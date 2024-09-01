@@ -19,16 +19,8 @@ impl RatesRepositoryImpl {
 #[async_trait::async_trait]
 impl RatesRepository for RatesRepositoryImpl {
     async fn get_rates(&self) -> Option<Vec<CurrencyRate>> {
-        let limit = 200;
-        let filter = doc! { "_id.id": { "$in": vec!["bitcoin", "ethereum", "solana", "dogecoin", "the-open-network", "binancecoin", "ripple", "pepe", "sun-token", "litecoin", "shiba-inu", "nyan-meme-coin"] }};
         let sort = doc! { "current_price": -1 };
-        let cursor = self
-            .collection
-            .find(filter)
-            .limit(limit)
-            .sort(sort)
-            .await
-            .ok()?;
+        let cursor = self.collection.find(doc! {}).sort(sort).await.ok()?;
 
         match cursor.try_collect().await {
             Ok(v) => Some(v),

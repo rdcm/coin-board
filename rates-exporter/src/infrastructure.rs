@@ -42,12 +42,8 @@ pub struct CoinGeckoCurrencyRate {
 
 #[async_trait::async_trait]
 impl RatesProvider for RatesProviderImpl {
-    async fn get_rates(&self, page: i32, page_size: i32) -> Option<Vec<CurrencyRate>> {
-        let query = vec![
-            ("page", page.to_string()),
-            ("per_page", page_size.to_string()),
-            ("vs_currency", "usd".to_string()),
-        ];
+    async fn get_rates(&self, coins_ids: &str) -> Option<Vec<CurrencyRate>> {
+        let query = vec![("ids", coins_ids), ("vs_currency", "usd")];
 
         let client = reqwest::Client::new();
         let resp = client
@@ -59,12 +55,7 @@ impl RatesProvider for RatesProviderImpl {
             .ok()?;
 
         if !resp.status().is_success() {
-            eprintln!(
-                "code: {}, page: {}, resp: {}",
-                resp.status(),
-                page,
-                resp.text().await.ok()?
-            );
+            eprintln!("code: {}, resp: {}", resp.status(), resp.text().await.ok()?);
 
             return None;
         }

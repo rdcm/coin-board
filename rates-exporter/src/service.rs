@@ -28,10 +28,10 @@ impl Service {
     }
 
     pub async fn run(&self) -> Option<()> {
-        let query = FetchDataQuery::new(
-            self.settings.provider.fetch_delay_per_page_ms,
-            self.settings.provider.page_size,
-        );
+        let query = FetchDataQuery {
+            coins_ids: self.settings.provider.coins.clone(),
+        };
+
         self.handler.handle(&query).await
     }
 }

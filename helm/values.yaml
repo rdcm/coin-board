@@ -39,8 +39,7 @@ exporter:
     name: coin-board
   provider:
     uri: https://api.coingecko.com/api/v3/coins/markets
-    fetchDelay: 30000
-    pageSize: 250
+    coins: bitcoin,ethereum,solana,dogecoin,the-open-network,binancecoin,ripple,pepe,sun-token,litecoin,shiba-inu,nyan-meme-coin
   label: rates-exporter
   expression: "0 * * * *" # every hour at minute 0
   failedJobsHistoryLimit: 3

@@ -41,14 +41,14 @@ exporter:
     uri: https://api.coingecko.com/api/v3/coins/markets
     coins: bitcoin,ethereum,solana,dogecoin,the-open-network,binancecoin,ripple,pepe,sun-token,litecoin,shiba-inu,nyan-meme-coin
   label: rates-exporter
-  expression: "0 * * * *" # every hour at minute 0
+  expression: "*/5 * * * *" # every 5 minutes
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
   replicas: 1
   weight: 3
   image:
     name: ghcr.io/rdcm/coin-board/rates-exporter
-    tag: v1.0.1
+    tag: v1.0.2
   pullPolicy: Never
   resources:
     limits:
@@ -64,7 +64,7 @@ api:
   internalPort: 7373
   image:
     name: ghcr.io/rdcm/coin-board/rates-api
-    tag: v1.0.1
+    tag: v1.0.2
   resources:
     limits:
       memory: "128Mi"

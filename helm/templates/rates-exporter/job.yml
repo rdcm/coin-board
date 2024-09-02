@@ -15,13 +15,7 @@ spec:
           containers:
             - name: {{ .Values.exporter.label }}
               image: "{{ .Values.exporter.image.name }}:{{ .Values.exporter.image.tag }}"
-              env:
-                - name: RATES_EXPORTER__DATABASE__DB_NAME
-                  value: {{ .Values.exporter.db.name }}
-                - name: RATES_EXPORTER__DATABASE__URI
-                  value: {{ .Values.exporter.db.uri }}
-                - name: RATES_EXPORTER__PROVIDER__URI
-                  value: {{ .Values.exporter.provider.uri }}
-                - name: RATES_EXPORTER__PROVIDER__COINS
-                  value: {{ .Values.exporter.provider.coins }}
+              envFrom:
+                - configMapRef:
+                    name: {{ .Values.exporter.label }}-config
           restartPolicy: OnFailure

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.exporter.label }}-config
+  labels:
+    app: {{ .Values.exporter.label }}
+data:
+  RATES_EXPORTER__DATABASE__DB_NAME: "{{ .Values.exporter.db.name }}"
+  RATES_EXPORTER__DATABASE__URI: "{{ .Values.exporter.db.uri }}"
+  RATES_EXPORTER__PROVIDER__URI: "{{ .Values.exporter.provider.uri }}"
+  RATES_EXPORTER__PROVIDER__COINS: "{{ .Values.exporter.provider.coins }}"

@@ -19,9 +19,9 @@ spec:
       containers:
         - name: {{ .Values.ui.label }}
           image: "{{ .Values.ui.image.name }}:{{ .Values.ui.image.tag }}"
-          env:
-            - name: COIN_BOARD_UI_API_URL
-              value: {{ .Values.ui.backendUri }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.ui.label }}-config
           resources:
             limits:
               memory: {{ .Values.ui.resources.limits.memory }}

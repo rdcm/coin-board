@@ -19,23 +19,9 @@ spec:
       containers:
         - name: {{ .Values.api.label }}
           image: "{{ .Values.api.image.name }}:{{ .Values.api.image.tag }}"
-          env:
-            - name: RATES_API__DATABASE__URI
-              value: {{ .Values.api.mongodb.uri }}
-            - name: RATES_API__DATABASE__DB_NAME
-              value: {{ .Values.api.mongodb.dbName }}
-            - name: RATES_API__CORS__METHODS
-              value: {{ .Values.api.cors.methods }}
-            - name: RATES_API__CORS__HEADERS
-              value: {{ .Values.api.cors.headers }}
-            - name: RATES_API__CORS__ORIGIN
-              value: {{ .Values.api.cors.origin }}
-            - name: RATES_API__CORS__MAX_AGE
-              value: "{{ .Values.api.cors.maxAge }}"
-            - name: RATES_API__ENDPOINTS__HOST
-              value: {{ .Values.api.host }}
-            - name: RATES_API__ENDPOINTS__PORT
-              value: "{{ .Values.api.internalPort }}"
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.api.label }}-config
           resources:
             limits:
               memory: {{ .Values.api.resources.limits.memory }}

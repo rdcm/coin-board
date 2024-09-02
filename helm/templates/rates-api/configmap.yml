@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.api.label }}-config
+  labels:
+    app: {{ .Values.api.label }}
+data:
+  RATES_API__DATABASE__URI: "{{ .Values.api.mongodb.uri }}"
+  RATES_API__DATABASE__DB_NAME: "{{ .Values.api.mongodb.dbName }}"
+  RATES_API__CORS__METHODS: "{{ .Values.api.cors.methods }}"
+  RATES_API__CORS__HEADERS: "{{ .Values.api.cors.headers }}"
+  RATES_API__CORS__ORIGIN: "{{ .Values.api.cors.origin }}"
+  RATES_API__CORS__MAX_AGE: "{{ .Values.api.cors.maxAge }}"
+  RATES_API__ENDPOINTS__HOST: "{{ .Values.api.host }}"
+  RATES_API__ENDPOINTS__PORT: "{{ .Values.api.internalPort }}"

@@ -44,6 +44,7 @@ exporter:
   expression: "*/5 * * * *" # every 5 minutes
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
   replicas: 1
   weight: 3
   image:

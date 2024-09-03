@@ -1,4 +1,5 @@
 imagePullSecrets: github-registry
+namespace: coin-board
 
 ui:
   backendUri: http://localhost:7373

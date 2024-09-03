@@ -1,7 +1,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Values.exporter.label }}
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.exporter.label }}-cronjob
 spec:
   schedule: "{{ .Values.exporter.expression }}"
   failedJobsHistoryLimit: {{ .Values.exporter.failedJobsHistoryLimit }}

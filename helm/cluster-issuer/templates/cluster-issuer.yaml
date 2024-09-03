@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.label }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ .Values.email }}
+    privateKeySecretRef:
+      name: {{ .Values.label }}
+    solvers:
+      - http01:
+          ingress:
+            class: nginx

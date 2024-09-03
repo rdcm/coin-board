@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ .Values.namespace }}
   name: {{ .Values.api.label }}-deployment
   annotations:
     "helm.sh/hook-weight": "{{ .Values.api.weight }}"

@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.mongodb.label }}
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.mongodb.label }}-statefulset
   labels:
     app: {{ .Values.mongodb.label }}
 spec:

@@ -33,41 +33,70 @@ create-secrets:
 	./generate_secret.sh --username $(username) --token $(token) > github-registry.yaml
 
 deploy-secrets:
-	kubectl apply -f github-registry.yaml
+	# https://stackoverflow.com/questions/63135361/how-to-create-kubernetes-namespace-if-it-does-not-exist
+	kubectl create namespace coin-board --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -f github-registry.yaml -n coin-board
 
-deploy-dev:
-	helm upgrade --install --atomic --timeout 300s --wait coin-board helm -f ./helm/values/dev.yml
+deploy-coin-board-dev:
+	helm upgrade --install --atomic --timeout 300s --wait coin-board helm/coin-board -f ./helm/coin-board/values/dev.yaml --create-namespace --namespace coin-board
 
-deploy-prod:
-	helm upgrade --install --atomic --timeout 300s --wait coin-board helm -f ./helm/values/prod.yml
+deploy-coin-board-prod:
+	helm upgrade --install --atomic --timeout 300s --wait coin-board helm/coin-board -f ./helm/coin-board/values/prod.yaml --create-namespace --namespace coin-board
 
-down:
-	helm delete coin-board
+deploy-ingress-controller:
+	helm upgrade --install --atomic --timeout 300s --wait ingress-controller helm/ingress-controller --create-namespace --namespace ingress-controller
 
-render-prod:
-	helm template -f ./helm/values/prod.yml helm > template-render-prod.yml
+deploy-cert-manager:
+	helm upgrade --install --atomic --timeout 300s --wait cert-manager helm/cert-manager --create-namespace --namespace cert-manager
 
-render-dev:
-	helm template -f ./helm/values/dev.yml helm > template-render-dev.yml
+deploy-cluster-issuer:
+	helm upgrade --install --atomic --timeout 300s --wait cluster-issuer helm/cluster-issuer --create-namespace --namespace cert-manager
+
+delete-ingress-controller:
+	helm delete ingress-controller --namespace ingress-controller
+
+delete-cert-manager:
+	helm delete cert-manager --namespace cert-manager
+
+delete-cluster-issuer:
+	helm delete cluster-issuer --namespace cert-manager
+
+delete-coin-board:
+	helm delete coin-board --namespace coin-board
+
+render-coin-board-prod:
+	helm template -f ./helm/coin-board/values/prod.yaml helm/coin-board > template-render-prod.yaml
+
+render-coin-board-dev:
+	helm template -f ./helm/coin-board/values/dev.yaml helm/coin-board > template-render-dev.yaml
 
 trigger-export:
-	kubectl create job --from=cronjob/rates-exporter rates-exporter
+	kubectl create job --from=cronjob/rates-exporter-cronjob rates-exporter-job --namespace coin-board
 
 help:
-	@echo "Usage:"
-	@echo "  ${GREEN}make create-secrets${NC}     ${YELLOW}username=<username> token=<token>${NC}   generate k8s secret for pulling images from private github registry "
-	@echo "  ${GREEN}make lint${NC}               ${YELLOW}(no arguments)${NC}                      run code linter"
-	@echo "  ${GREEN}make format${NC}             ${YELLOW}(no arguments)${NC}                      run code formatter"
-	@echo "  ${GREEN}make build-dev${NC}          ${YELLOW}(no arguments)${NC}                      make application dev builds"
-	@echo "  ${GREEN}make run-api-dev${NC}        ${YELLOW}(no arguments)${NC}                      run api dev build locally"
-	@echo "  ${GREEN}make run-exporter-dev${NC}   ${YELLOW}(no arguments)${NC}                      run exporter dev build locally"
-	@echo "  ${BLUE}make docker-build${NC}       ${YELLOW}(no arguments)${NC}                      build docker images with docker-compose"
-	@echo "  ${BLUE}make docker-up${NC}          ${YELLOW}(no arguments)${NC}                      up docker images with docker-compose"
-	@echo "  ${BLUE}make docker-down${NC}        ${YELLOW}(no arguments)${NC}                      down docker-compose services "
-	@echo "  ${PURPLE}make deploy-dev${NC}         ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with dev values "
-	@echo "  ${PURPLE}make deploy-prod${NC}        ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with prod values "
-	@echo "  ${PURPLE}make deploy-secrets${NC}     ${YELLOW}(no arguments)${NC}                      deploy github registry secrets "
-	@echo "  ${PURPLE}make trigger-export${NC}     ${YELLOW}(no arguments)${NC}                      trigger cronjob for export currency rates "
-	@echo "  ${RED}make down${NC}               ${YELLOW}(no arguments)${NC}                      delete helm chart with applications"
-	@echo "  ${GREEN}make render-prod${NC}        ${YELLOW}(no arguments)${NC}                      render helm chart with prod values"
-	@echo "  ${GREEN}make render-dev${NC}         ${YELLOW}(no arguments)${NC}                      render helm chart with dev values"
+	@echo "Local:"
+	@echo "  ${GREEN}make lint${NC}                     ${YELLOW}(no arguments)${NC}                      run code linter"
+	@echo "  ${GREEN}make format${NC}                   ${YELLOW}(no arguments)${NC}                      run code formatter"
+	@echo "  ${GREEN}make build-dev${NC}                ${YELLOW}(no arguments)${NC}                      make application dev builds"
+	@echo "  ${GREEN}make run-api-dev${NC}              ${YELLOW}(no arguments)${NC}                      run api dev build locally"
+	@echo "  ${GREEN}make run-exporter-dev${NC}         ${YELLOW}(no arguments)${NC}                      run exporter dev build locally"
+	@echo "Docker:"
+	@echo "  ${BLUE}make docker-build${NC}             ${YELLOW}(no arguments)${NC}                      build docker images with docker-compose"
+	@echo "  ${BLUE}make docker-up${NC}                ${YELLOW}(no arguments)${NC}                      up docker images with docker-compose"
+	@echo "  ${BLUE}make docker-down${NC}              ${YELLOW}(no arguments)${NC}                      down docker-compose services "
+	@echo "Helm:"
+	@echo "  ${PURPLE}make create-secrets${NC}           ${YELLOW}username=<username> token=<token>${NC}   generate k8s secret for pulling images from private github registry "
+	@echo "  ${PURPLE}make deploy-coin-board-dev${NC}    ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with dev values "
+	@echo "  ${PURPLE}make deploy-coin-board-prod${NC}   ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with prod values "
+	@echo "  ${PURPLE}make deploy-cert-manager${NC}      ${YELLOW}(no arguments)${NC}                      deploy cert-manger ${RED}(only for prod env)${NC} "
+	@echo "  ${PURPLE}make deploy-cluster-issuer${NC}    ${YELLOW}(no arguments)${NC}                      deploy cluster-issuer ${RED}(only for prod env)${NC} "
+	@echo "  ${PURPLE}make deploy-ingress-controller${NC}${YELLOW}(no arguments)${NC}                      deploy ingress-controller ${RED}(only for prod env)${NC} "
+	@echo "  ${PURPLE}make deploy-secrets${NC}           ${YELLOW}(no arguments)${NC}                      deploy github registry secrets "
+	@echo "  ${PURPLE}make trigger-export${NC}           ${YELLOW}(no arguments)${NC}                      trigger cronjob for export currency rates "
+	@echo "  ${PURPLE}make render-coin-board-prod${NC}   ${YELLOW}(no arguments)${NC}                      render helm chart with prod values"
+	@echo "  ${PURPLE}make render-coin-board-dev${NC}    ${YELLOW}(no arguments)${NC}                      render helm chart with dev values"
+	@echo "  ${RED}make delete-coin-board${NC}        ${YELLOW}(no arguments)${NC}                      delete helm chart with applications"
+	@echo "  ${RED}make delete-cert-manager${NC}      ${YELLOW}(no arguments)${NC}                      delete helm chart with cert-manager"
+	@echo "  ${RED}make delete-cluster-issuer${NC}    ${YELLOW}(no arguments)${NC}                      delete helm chart with cluster-issuer"
+	@echo "  ${RED}make delete-ingress-controller${NC}${YELLOW}(no arguments)${NC}                      delete helm chart with ingress-controller"
+

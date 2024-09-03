@@ -1,0 +1,3 @@
+# https://github.com/cert-manager/cert-manager/issues/1829
+cert-manager:
+  installCRDs: true

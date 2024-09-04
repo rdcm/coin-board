@@ -5,12 +5,19 @@ pub struct Settings {
     pub database: DbSettings,
     pub endpoints: ApiSettings,
     pub cors: CorsSettings,
+    pub metrics: MetricsSettings,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct DbSettings {
     pub db_name: String,
     pub uri: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MetricsSettings {
+    pub host: String,
+    pub port: i32,
 }
 
 #[derive(Debug, Deserialize)]
@@ -28,6 +35,12 @@ pub struct CorsSettings {
 }
 
 impl ApiSettings {
+    pub fn get_api_address(&self) -> String {
+        format!("{}:{}", self.host, self.port)
+    }
+}
+
+impl MetricsSettings {
     pub fn get_api_address(&self) -> String {
         format!("{}:{}", self.host, self.port)
     }

@@ -14,3 +14,5 @@ data:
   RATES_API__CORS__MAX_AGE: "{{ .Values.api.cors.maxAge }}"
   RATES_API__ENDPOINTS__HOST: "{{ .Values.api.host }}"
   RATES_API__ENDPOINTS__PORT: "{{ .Values.api.internalPort }}"
+  RATES_API__METRICS__HOST: "{{ .Values.api.metrics.host }}"
+  RATES_API__METRICS__PORT: "{{ .Values.api.metrics.port }}"

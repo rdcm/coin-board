@@ -64,6 +64,9 @@ api:
   host: 0.0.0.0
   externalPort: 80
   internalPort: 7373
+  metrics:
+    host: 0.0.0.0
+    port: 5000
   image:
     name: ghcr.io/rdcm/coin-board/rates-api
     tag: v1.0.2

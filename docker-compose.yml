@@ -26,9 +26,12 @@ services:
       - mongo
     ports:
       - "7373:7373"
+      - "5000:5000"
     environment:
       - RATES_API__ENDPOINTS__HOST=0.0.0.0
       - RATES_API__ENDPOINTS__PORT=7373
+      - RATES_API__METRICS__HOST=0.0.0.0
+      - RATES_API__METRICS__PORT=5000
       - RATES_API__DATABASE__DB_NAME=coin-board
       - RATES_API__DATABASE__URI=mongodb://mongo:27017/coin-board
       - RATES_API__CORS__METHODS=GET

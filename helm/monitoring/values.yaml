@@ -1,0 +1,21 @@
+namespace: monitoring
+
+grafana:
+  name: grafana
+  port: 3000
+  replicas: 1
+  image:
+    name: grafana/grafana
+    tag: latest
+  storageClassName: hostpath
+  storageCapacity: 1Gi
+
+prometheus:
+  name: prometheus
+  port: 9090
+  replicas: 1
+  image:
+    name: prom/prometheus
+    tag: v2.42.0
+  storageClassName: hostpath
+  storageCapacity: 1Gi

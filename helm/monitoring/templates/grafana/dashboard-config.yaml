@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.grafana.name }}-dashboard-config
+  namespace: {{ .Values.namespace }}
+data:
+  coin-board.json: |-
+{{ .Files.Get "dashboards/coin-board.json" | indent 4 }}
+  dashboards.yaml: |-
+{{ .Files.Get "dashboards/dashboards.yaml" | indent 4 }}

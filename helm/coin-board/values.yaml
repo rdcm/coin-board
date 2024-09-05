@@ -50,7 +50,7 @@ exporter:
   weight: 3
   image:
     name: ghcr.io/rdcm/coin-board/rates-exporter
-    tag: v1.0.2
+    tag: v1.0.3
   pullPolicy: Never
   resources:
     limits:
@@ -69,7 +69,7 @@ api:
     port: 5000
   image:
     name: ghcr.io/rdcm/coin-board/rates-api
-    tag: v1.0.2
+    tag: v1.0.3
   resources:
     limits:
       memory: "128Mi"

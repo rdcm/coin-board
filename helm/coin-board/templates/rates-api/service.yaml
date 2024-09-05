@@ -10,4 +10,9 @@ spec:
     - protocol: TCP
       port: {{ .Values.api.externalPort }}
       targetPort: {{ .Values.api.internalPort }}
+      name: app
+    - protocol: TCP
+      port: {{ .Values.api.metrics.port }}
+      targetPort: {{ .Values.api.metrics.port }}
+      name: metrics
   type: ClusterIP

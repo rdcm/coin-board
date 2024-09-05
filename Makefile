@@ -52,6 +52,12 @@ deploy-cert-manager:
 deploy-cluster-issuer:
 	helm upgrade --install --atomic --timeout 300s --wait cluster-issuer helm/cluster-issuer --create-namespace --namespace cert-manager
 
+deploy-monitoring-dev:
+	helm upgrade --install --atomic --timeout 300s --wait monitoring helm/monitoring -f ./helm/monitoring/values/dev.yaml --create-namespace --namespace monitoring
+
+deploy-monitoring-prod:
+	helm upgrade --install --atomic --timeout 300s --wait monitoring helm/monitoring -f ./helm/monitoring/values/prod.yaml --create-namespace --namespace monitoring
+
 delete-ingress-controller:
 	helm delete ingress-controller --namespace ingress-controller
 
@@ -63,6 +69,9 @@ delete-cluster-issuer:
 
 delete-coin-board:
 	helm delete coin-board --namespace coin-board
+
+delete-monitoring:
+	helm delete monitoring --namespace monitoring
 
 render-coin-board-prod:
 	helm template -f ./helm/coin-board/values/prod.yaml helm/coin-board > template-render-prod.yaml
@@ -86,12 +95,14 @@ help:
 	@echo "  ${BLUE}make docker-down${NC}              ${YELLOW}(no arguments)${NC}                      down docker-compose services "
 	@echo "Helm:"
 	@echo "  ${PURPLE}make create-secrets${NC}           ${YELLOW}username=<username> token=<token>${NC}   generate k8s secret for pulling images from private github registry "
-	@echo "  ${PURPLE}make deploy-coin-board-dev${NC}    ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with dev values "
-	@echo "  ${PURPLE}make deploy-coin-board-prod${NC}   ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with prod values "
-	@echo "  ${PURPLE}make deploy-cert-manager${NC}      ${YELLOW}(no arguments)${NC}                      deploy cert-manger ${RED}(only for prod env)${NC} "
-	@echo "  ${PURPLE}make deploy-cluster-issuer${NC}    ${YELLOW}(no arguments)${NC}                      deploy cluster-issuer ${RED}(only for prod env)${NC} "
-	@echo "  ${PURPLE}make deploy-ingress-controller${NC}${YELLOW}(no arguments)${NC}                      deploy ingress-controller ${RED}(only for prod env)${NC} "
-	@echo "  ${PURPLE}make deploy-secrets${NC}           ${YELLOW}(no arguments)${NC}                      deploy github registry secrets "
+	@echo "  ${PURPLE}make deploy-coin-board-dev${NC}    ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with dev values"
+	@echo "  ${PURPLE}make deploy-coin-board-prod${NC}   ${YELLOW}(no arguments)${NC}                      deploy applications helm chart with prod values"
+	@echo "  ${PURPLE}make deploy-cert-manager${NC}      ${YELLOW}(no arguments)${NC}                      deploy cert-manger ${RED}(only for prod env)${NC}"
+	@echo "  ${PURPLE}make deploy-cluster-issuer${NC}    ${YELLOW}(no arguments)${NC}                      deploy cluster-issuer ${RED}(only for prod env)${NC}"
+	@echo "  ${PURPLE}make deploy-ingress-controller${NC}${YELLOW}(no arguments)${NC}                      deploy ingress-controller ${RED}(only for prod env)${NC}"
+	@echo "  ${PURPLE}make deploy-secrets${NC}           ${YELLOW}(no arguments)${NC}                      deploy github registry secrets"
+	@echo "  ${PURPLE}make deploy-monitoring-dev${NC}    ${YELLOW}(no arguments)${NC}                      deploy monitoring infrastructure with dev values"
+	@echo "  ${PURPLE}make deploy-monitoring-prod${NC}   ${YELLOW}(no arguments)${NC}                      deploy monitoring infrastructure with prod values"
 	@echo "  ${PURPLE}make trigger-export${NC}           ${YELLOW}(no arguments)${NC}                      trigger cronjob for export currency rates "
 	@echo "  ${PURPLE}make render-coin-board-prod${NC}   ${YELLOW}(no arguments)${NC}                      render helm chart with prod values"
 	@echo "  ${PURPLE}make render-coin-board-dev${NC}    ${YELLOW}(no arguments)${NC}                      render helm chart with dev values"
@@ -99,4 +110,5 @@ help:
 	@echo "  ${RED}make delete-cert-manager${NC}      ${YELLOW}(no arguments)${NC}                      delete helm chart with cert-manager"
 	@echo "  ${RED}make delete-cluster-issuer${NC}    ${YELLOW}(no arguments)${NC}                      delete helm chart with cluster-issuer"
 	@echo "  ${RED}make delete-ingress-controller${NC}${YELLOW}(no arguments)${NC}                      delete helm chart with ingress-controller"
+	@echo "  ${RED}make delete-monitoring${NC}        ${YELLOW}(no arguments)${NC}                      delete helm chart with monitoring"
 

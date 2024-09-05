@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.grafana.name }}-stateful-set
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: {{ .Values.grafana.name }}-service
+  replicas: {{ .Values.grafana.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.grafana.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.grafana.name }}
+    spec:
+      containers:
+        - name: {{ .Values.grafana.name }}
+          image: "{{ .Values.grafana.image.name }}:{{ .Values.grafana.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.grafana.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.grafana.name }}-config
+          volumeMounts:
+            - name: {{ .Values.grafana.name }}-storage
+              mountPath: /var/lib/grafana
+            - name: {{ .Values.grafana.name }}-dashboards
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: {{ .Values.grafana.name }}-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+      volumes:
+        - name: {{ .Values.grafana.name }}-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.grafana.name }}-pvc
+        - name: {{ .Values.grafana.name }}-dashboards
+          configMap:
+            name: {{ .Values.grafana.name }}-dashboard-config
+        - name: {{ .Values.grafana.name }}-datasources
+          configMap:
+            name: {{ .Values.grafana.name }}-datasource-config
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.grafana.name }}-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.grafana.storageClassName }}
+        resources:
+          requests:
+            storage: {{ .Values.grafana.storageCapacity }}

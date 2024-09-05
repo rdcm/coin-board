@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.grafana.name }}-datasource-config
+  namespace: {{ .Values.namespace }}
+data:
+  datasources.yaml: |
+{{ .Files.Get "dashboards/datasources.yaml" | indent 4 }}

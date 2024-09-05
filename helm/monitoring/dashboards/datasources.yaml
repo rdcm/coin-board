@@ -1,0 +1,14 @@
+apiVersion: 1
+datasources:
+  - name: prometheus
+    type: prometheus
+    uid: fdww6u6ehb0g0d
+    orgId: 1
+    typeName: Prometheus
+    access: proxy
+    url: http://prometheus-service:9090
+    typeLogoUrl: public/app/plugins/datasource/prometheus/img/prometheus_logo.svg
+    jsonData:
+      httpMethod: POST
+    readOnly: false
+    isDefault: true

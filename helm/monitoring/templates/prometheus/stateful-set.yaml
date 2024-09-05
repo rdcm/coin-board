@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.prometheus.name }}-stateful-set
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: {{ .Values.prometheus.name }}-service
+  replicas: {{ .Values.prometheus.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.prometheus.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.prometheus.name }}
+    spec:
+      serviceAccountName: {{ .Values.prometheus.name }}-service-account
+      containers:
+        - name: {{ .Values.prometheus.name }}
+          image: "{{ .Values.prometheus.image.name }}:{{ .Values.prometheus.image.tag }}"
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--storage.tsdb.retention.time=15d"
+          ports:
+            - containerPort: {{ .Values.prometheus.port }}
+              name: web
+          volumeMounts:
+            - name: prometheus-storage
+              mountPath: /prometheus
+            - name: prometheus-config
+              mountPath: /etc/prometheus
+              readOnly: true
+      volumes:
+        - name: {{ .Values.prometheus.name }}-config
+          configMap:
+            name: {{ .Values.prometheus.name }}-config
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.prometheus.name }}-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.prometheus.storageCapacity }}
+        storageClassName: {{ .Values.prometheus.storageClassName }}

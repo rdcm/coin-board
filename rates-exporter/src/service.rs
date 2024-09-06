@@ -2,8 +2,9 @@ use crate::domain::{FetchDataQuery, FetchRatesQueryHandler};
 use crate::domain_impl::FetchRatesQueryHandlerImpl;
 use crate::infrastructure::{RatesProviderImpl, RatesRepositoryImpl};
 use crate::settings::Settings;
-use mongodb::options::{ClientOptions, ServerApi, ServerApiVersion};
-use mongodb::Client;
+use anyhow::{Context, Result};
+use mongodb::options::ClientOptions;
+use mongodb::Client as MongoClient;
 use std::sync::Arc;
 
 pub struct Service {
@@ -12,26 +13,29 @@ pub struct Service {
 }
 
 impl Service {
-    pub async fn build(settings: Settings) -> Self {
-        let mut client_options = ClientOptions::parse(&settings.database.uri).await.unwrap();
-        let server_api = ServerApi::builder().version(ServerApiVersion::V1).build();
-        client_options.server_api = Some(server_api);
+    pub async fn build(settings: Settings) -> Result<Self> {
+        let client_options = ClientOptions::parse(&settings.database.uri)
+            .await
+            .context("[rates-exporter] [mongodb] Failed parse database URI")?;
 
-        let client = Client::with_options(client_options).unwrap();
+        let client = MongoClient::with_options(client_options)
+            .context("[rates-exporter] [mongodb] Failed create mongodb client")?;
 
         let repository = RatesRepositoryImpl::new(client, &settings.database.db_name);
         let rates_provider = RatesProviderImpl::new(settings.provider.uri.to_string());
         let handler =
             FetchRatesQueryHandlerImpl::new(Arc::new(repository), Arc::new(rates_provider));
 
-        Service { handler, settings }
+        Ok(Service { handler, settings })
     }
 
-    pub async fn run(&self) -> Option<()> {
+    pub async fn run(&self) -> Result<()> {
         let query = FetchDataQuery {
             coins_ids: self.settings.provider.coins.clone(),
         };
 
-        self.handler.handle(&query).await
+        self.handler.handle(&query).await?;
+
+        Ok(())
     }
 }

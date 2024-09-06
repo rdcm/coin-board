@@ -1,4 +1,5 @@
 use crate::domain_impl::{CurrencyRate, Key, RatesProvider, RatesRepository};
+use anyhow::{Context, Result};
 use mongodb::bson::{doc, to_bson, Bson};
 use mongodb::{Client as MongoClient, Collection};
 use reqwest::header::HeaderValue;
@@ -42,7 +43,7 @@ pub struct CoinGeckoCurrencyRate {
 
 #[async_trait::async_trait]
 impl RatesProvider for RatesProviderImpl {
-    async fn get_rates(&self, coins_ids: &str) -> Option<Vec<CurrencyRate>> {
+    async fn get_rates(&self, coins_ids: &str) -> Result<Vec<CurrencyRate>> {
         let query = vec![("ids", coins_ids), ("vs_currency", "usd")];
 
         let client = reqwest::Client::new();
@@ -52,15 +53,26 @@ impl RatesProvider for RatesProviderImpl {
             .header("User-Agent", HeaderValue::from_static("Mozilla/5.0"))
             .send()
             .await
-            .ok()?;
+            .context("[rates-exporter] [coin-gecko-api] Fetch currency rates failed")?;
 
         if !resp.status().is_success() {
-            eprintln!("code: {}, resp: {}", resp.status(), resp.text().await.ok()?);
+            let status = resp.status();
+            let text = resp
+                .text()
+                .await
+                .context("[rates-exporter] [coin-gecko-api] Filed read bad response body")?;
 
-            return None;
+            return Err(anyhow::anyhow!(
+                "[rates-exporter] [coin-gecko-api] Received non-success response: code: {}, resp: {}",
+                status,
+                text
+            ));
         }
 
-        let exported_rates = resp.json::<Vec<CoinGeckoCurrencyRate>>().await.ok()?;
+        let exported_rates = resp
+            .json::<Vec<CoinGeckoCurrencyRate>>()
+            .await
+            .context("[rates-exporter] [coin-gecko-api] Response deserialization failed")?;
 
         let rates: Vec<CurrencyRate> = exported_rates
             .iter()
@@ -80,13 +92,13 @@ impl RatesProvider for RatesProviderImpl {
             })
             .collect();
 
-        Some(rates)
+        Ok(rates)
     }
 }
 
 #[async_trait::async_trait]
 impl RatesRepository for RatesRepositoryImpl {
-    async fn insert(&self, rates: Vec<CurrencyRate>) -> Option<()> {
+    async fn insert(&self, rates: Vec<CurrencyRate>) -> Result<()> {
         let ids = rates
             .iter()
             .flat_map(|r| to_bson(&r._id))
@@ -94,13 +106,18 @@ impl RatesRepository for RatesRepositoryImpl {
 
         let filter = doc! { "_id": { "$in": ids } };
 
-        _ = self.collection.delete_many(filter).await;
-        match self.collection.insert_many(rates).await {
-            Ok(_) => Some(()),
-            Err(e) => {
-                eprintln!("Bulk write error: {:?}", e);
-                None
-            }
-        }
+        _ = self
+            .collection
+            .delete_many(filter)
+            .await
+            .context("[rates-exporter] [mongodb] Delete many failed")?;
+
+        _ = self
+            .collection
+            .insert_many(rates)
+            .await
+            .context("[rates-exporter] [mongodb] Insert many failed")?;
+
+        Ok(())
     }
 }

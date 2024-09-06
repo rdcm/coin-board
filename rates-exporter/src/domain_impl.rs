@@ -1,6 +1,8 @@
 use crate::domain::{FetchDataQuery, FetchRatesQueryHandler};
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+
 pub struct FetchRatesQueryHandlerImpl {
     pub repository: Arc<dyn RatesRepository + Send + Sync>,
     pub rates_provider: Arc<dyn RatesProvider + Send + Sync>,
@@ -8,11 +10,9 @@ pub struct FetchRatesQueryHandlerImpl {
 
 #[async_trait::async_trait]
 impl FetchRatesQueryHandler for FetchRatesQueryHandlerImpl {
-    async fn handle(&self, query: &FetchDataQuery) -> Option<()> {
+    async fn handle(&self, query: &FetchDataQuery) -> Result<()> {
         let rates = self.rates_provider.get_rates(&query.coins_ids).await?;
-        if rates.is_empty() {
-            return Some(());
-        }
+
         self.repository.insert(rates).await
     }
 }
@@ -50,10 +50,10 @@ pub struct Key {
 
 #[async_trait::async_trait]
 pub trait RatesRepository {
-    async fn insert(&self, rates: Vec<CurrencyRate>) -> Option<()>;
+    async fn insert(&self, rates: Vec<CurrencyRate>) -> Result<()>;
 }
 
 #[async_trait::async_trait]
 pub trait RatesProvider {
-    async fn get_rates(&self, coins_ids: &str) -> Option<Vec<CurrencyRate>>;
+    async fn get_rates(&self, coins_ids: &str) -> Result<Vec<CurrencyRate>>;
 }

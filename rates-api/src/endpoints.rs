@@ -7,10 +7,10 @@ use actix_web::{get, HttpResponse};
 pub async fn get_rates(handler: Data<dyn GetRatesQueryHandler>) -> HttpResponse {
     let query = GetRatesQuery;
 
-    let option = handler.handle(&query).await;
+    let result = handler.handle(&query).await;
 
-    match option {
-        Some(rates) => HttpResponse::Ok().json(RatesResponse::from_currency_rates(rates)),
-        None => HttpResponse::BadRequest().json(ErrorResponse { code: 101 }),
+    match result {
+        Ok(rates) => HttpResponse::Ok().json(RatesResponse::from_currency_rates(rates)),
+        Err(_) => HttpResponse::BadRequest().json(ErrorResponse { code: 101 }),
     }
 }

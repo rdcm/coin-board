@@ -1,3 +1,4 @@
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
 pub struct GetRatesQuery;
@@ -23,5 +24,5 @@ pub struct Key {
 
 #[async_trait::async_trait]
 pub trait GetRatesQueryHandler: Send + Sync {
-    async fn handle(&self, query: &GetRatesQuery) -> Option<Vec<CurrencyRate>>;
+    async fn handle(&self, query: &GetRatesQuery) -> Result<Vec<CurrencyRate>>;
 }

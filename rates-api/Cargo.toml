@@ -6,6 +6,7 @@ license = "MIT"
 
 [dependencies]
 async-trait = { workspace = true }
+anyhow = { workspace = true }
 mongodb = { workspace = true }
 tokio = { workspace = true }
 serde = { workspace = true }
@@ -15,3 +16,4 @@ actix-web = "4.9.0"
 actix-cors = "0.7.0"
 futures = "0.3.30"
 prometheus = "0.13.4"
+env_logger = "0.11.5"

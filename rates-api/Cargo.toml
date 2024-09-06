@@ -2,6 +2,7 @@
 name="rates-api"
 version="0.0.1"
 edition="2021"
+license = "MIT"
 
 [dependencies]
 tokio = { version = "1.33.0", features = ["full"] }
@@ -11,6 +12,6 @@ actix-web = "4.9.0"
 actix-cors = "0.7.0"
 async-trait = "0.1.81"
 mongodb = "3.0.1"
-dotenv = "0.15"
+dotenvy = "0.15.7"
 futures = "0.3.30"
 prometheus = "0.13.4"

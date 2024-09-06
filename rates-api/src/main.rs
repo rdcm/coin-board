@@ -1,5 +1,5 @@
 use config::{Config, Environment};
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use rates_api::service::Service;
 use rates_api::settings::Settings;
 

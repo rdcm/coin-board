@@ -5,6 +5,9 @@ BLUE=\033[0;34m
 PURPLE=\033[0;35m
 NC=\033[0m # No Color
 
+deny:
+	cargo deny check
+
 lint:
 	cargo clippy
 
@@ -83,7 +86,8 @@ trigger-export:
 	kubectl create job --from=cronjob/rates-exporter-cronjob rates-exporter-job --namespace coin-board
 
 help:
-	@echo "Local:"
+	@echo "Dev:"
+	@echo "  ${GREEN}make deny${NC}                     ${YELLOW}(no arguments)${NC}                      run deps linter"
 	@echo "  ${GREEN}make lint${NC}                     ${YELLOW}(no arguments)${NC}                      run code linter"
 	@echo "  ${GREEN}make format${NC}                   ${YELLOW}(no arguments)${NC}                      run code formatter"
 	@echo "  ${GREEN}make build-dev${NC}                ${YELLOW}(no arguments)${NC}                      make application dev builds"

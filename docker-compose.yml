@@ -14,6 +14,7 @@ services:
       - RATES_EXPORTER__PROVIDER__URI=https://api.coingecko.com/api/v3/coins/markets
       - RATES_EXPORTER__PROVIDER__COINS=bitcoin,ethereum,solana,dogecoin,the-open-network,binancecoin,ripple,pepe,sun-token,litecoin,shiba-inu,nyan-meme-coin
       - RUST_BACKTRACE=1
+      - RUST_LOG=debug
 
   rates-api:
     build:
@@ -39,6 +40,7 @@ services:
       - RATES_API__CORS__ORIGIN=http://localhost:3000
       - RATES_API__CORS__MAX_AGE=3600
       - RUST_BACKTRACE=1
+      - RUST_LOG=debug
 
   mongo:
     hostname: mongo

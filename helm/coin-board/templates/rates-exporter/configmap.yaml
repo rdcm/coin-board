@@ -10,3 +10,4 @@ data:
   RATES_EXPORTER__DATABASE__URI: "{{ .Values.exporter.db.uri }}"
   RATES_EXPORTER__PROVIDER__URI: "{{ .Values.exporter.provider.uri }}"
   RATES_EXPORTER__PROVIDER__COINS: "{{ .Values.exporter.provider.coins }}"
+  RUST_LOG: "{{ .Values.exporter.logLevel }}"

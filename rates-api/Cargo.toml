@@ -12,8 +12,10 @@ tokio = { workspace = true }
 serde = { workspace = true }
 config = { workspace = true }
 dotenvy = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
 actix-web = "4.9.0"
 actix-cors = "0.7.0"
+tracing-actix-web = "0.7.12"
 futures = "0.3.30"
 prometheus = "0.13.4"
-env_logger = "0.11.5"

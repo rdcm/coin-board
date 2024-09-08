@@ -11,6 +11,7 @@ use anyhow::{Context, Result};
 use mongodb::options::ClientOptions;
 use mongodb::Client as MongoClient;
 use std::sync::Arc;
+use tracing_actix_web::TracingLogger;
 
 pub struct Service {
     api_server: Server,
@@ -39,6 +40,7 @@ impl Service {
             let metrics = metrics.clone();
             move || {
                 App::new()
+                    .wrap(TracingLogger::default())
                     .wrap(
                         Cors::default()
                             .allowed_origin(&settings.cors.origin)
@@ -76,6 +78,7 @@ impl Service {
             let metrics = metrics.clone();
             move || {
                 App::new()
+                    .wrap(TracingLogger::default())
                     .app_data(Data::new(metrics.clone()))
                     .route("/metrics", web::get().to(get_metrics_handler))
             }

@@ -7,6 +7,7 @@ use actix_web::{
 use anyhow::{Context, Result};
 use prometheus::{register_counter, register_histogram, Counter, Encoder, Histogram, TextEncoder};
 use std::sync::Arc;
+use tracing::error;
 
 pub struct Metrics {
     pub request_count: Counter,
@@ -39,7 +40,7 @@ pub async fn get_metrics_handler(_: Data<Arc<Metrics>>) -> Result<HttpResponse, 
     let metric_families = prometheus::gather();
 
     encoder.encode(&metric_families, &mut buffer).map_err(|e| {
-        eprintln!("[rates-api] [prometheus] Metrics encoding error: {:?}", e);
+        error!("[rates-api] [prometheus] Metrics encoding error: {}", e);
         actix_web::error::ErrorInternalServerError(e)
     })?;
 

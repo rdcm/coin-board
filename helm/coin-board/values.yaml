@@ -48,6 +48,7 @@ exporter:
   concurrencyPolicy: Forbid
   replicas: 1
   weight: 3
+  logLevel: error
   image:
     name: ghcr.io/rdcm/coin-board/rates-exporter
     tag: v1.0.3
@@ -64,6 +65,7 @@ api:
   host: 0.0.0.0
   externalPort: 80
   internalPort: 7373
+  logLevel: error
   metrics:
     host: 0.0.0.0
     port: 5000

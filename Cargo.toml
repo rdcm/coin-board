@@ -11,5 +11,7 @@ anyhow = "1.0.86"
 mongodb = "3.0.1"
 config = "0.14.0"
 dotenvy = "0.15.7"
+tracing = "0.1.40"
+tracing-subscriber =  { version = "0.3.18", features = ["env-filter"] }
 tokio = { version = "1.33.0", features = ["full"] }
 serde = { version = "1.0.207", features = ["derive"] }

@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   datasources.yaml: |
-{{ .Files.Get "dashboards/datasources.yaml" | indent 4 }}
+{{ .Files.Get "configs/grafana/datasources.yaml" | indent 4 }}

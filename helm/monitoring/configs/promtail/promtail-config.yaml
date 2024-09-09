@@ -1,0 +1,42 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+clients:
+  - url: http://loki-service:3100/loki/api/v1/push
+
+positions:
+  filename: /var/log/positions.yaml
+
+scrape_configs:
+  - job_name: kubernetes
+    pipeline_stages:
+      - docker: {}  # Parse Docker logs, adjust as needed if using a different log format
+      - json: {}    # Parse JSON logs, if applicable
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - source_labels: [__meta_kubernetes_container_name]
+        target_label: container
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        target_label: app
+      - source_labels: [__meta_kubernetes_pod_label_component]
+        target_label: component
+      - source_labels: [__meta_kubernetes_pod_label_version]
+        target_label: version
+      - source_labels: [__meta_kubernetes_pod_label_environment]
+        target_label: environment
+      - source_labels: [__meta_kubernetes_node_name]
+        target_label: node
+      - source_labels: [__meta_kubernetes_container_name]
+        target_label: container_name
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: kubernetes
+          __path__: /var/log/pods/*/*/*.log  # Path to container logs on the host

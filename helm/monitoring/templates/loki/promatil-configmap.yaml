@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.promtail.name }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  promtail-config.yaml: |
+{{ .Files.Get "configs/promtail/promtail-config.yaml" | indent 4 }}

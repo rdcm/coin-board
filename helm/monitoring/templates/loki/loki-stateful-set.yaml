@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.loki.name }}-stateful-set
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: {{ .Values.loki.name }}
+  replicas: {{ .Values.loki.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.loki.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.loki.name }}
+    spec:
+      containers:
+        - name: {{ .Values.loki.name }}
+          image: "{{ .Values.loki.image.name }}:{{ .Values.loki.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.loki.port }}
+          args:
+            - -config.file=/etc/loki/loki-config.yaml
+          volumeMounts:
+            - name: {{ .Values.loki.name }}-storage
+              mountPath: /var/loki
+            - name: {{ .Values.loki.configsVolume }}
+              mountPath: /etc/loki/loki-config.yaml
+              subPath: loki-config.yaml
+      volumes:
+        - name: {{ .Values.loki.configsVolume }}
+          configMap:
+            name: {{ .Values.loki.name }}-config
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.loki.name }}-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.loki.storageCapacity }}
+        storageClassName: {{ .Values.storageClassName }}

@@ -5,6 +5,8 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   coin-board.json: |-
-{{ .Files.Get "dashboards/coin-board.json" | indent 4 }}
+{{ .Files.Get "configs/grafana/coin-board.json" | indent 4 }}
+  logs.json: |-
+{{ .Files.Get "configs/grafana/logs.json" | indent 4 }}
   dashboards.yaml: |-
-{{ .Files.Get "dashboards/dashboards.yaml" | indent 4 }}
+{{ .Files.Get "configs/grafana/dashboards.yaml" | indent 4 }}

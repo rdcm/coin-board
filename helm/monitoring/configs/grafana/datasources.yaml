@@ -1,3 +1,4 @@
+# http://localhost:3000/api/datasources
 apiVersion: 1
 datasources:
   - name: prometheus
@@ -12,3 +13,13 @@ datasources:
       httpMethod: POST
     readOnly: false
     isDefault: true
+  - name: loki
+    type: loki
+    uid: ddxdvdy3mxse8f
+    orgId: 1
+    typeName: Loki
+    access: proxy
+    url: http://loki-service:3100
+    typeLogoUrl: public/app/plugins/datasource/loki/img/loki_icon.svg
+    readOnly: false
+    isDefault: false

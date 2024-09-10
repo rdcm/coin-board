@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Values.promtail.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Values.promtail.name }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.promtail.name }}
+    spec:
+      containers:
+        - name: {{ .Values.promtail.name }}
+          image: "{{ .Values.promtail.image.name }}:{{ .Values.promtail.image.tag }}"
+          args:
+            - -config.file=/etc/promtail/promtail-config.yaml
+          volumeMounts:
+            - name: {{ .Values.promtail.configsVolume }}
+              mountPath: /etc/promtail/promtail-config.yaml
+              subPath: {{ .Values.promtail.name }}-config.yaml
+            - name: {{ .Values.promtail.logsVolume }}
+              mountPath: /var/log
+            - name: {{ .Values.promtail.containersVolume }}
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+      volumes:
+        - name: {{ .Values.promtail.configsVolume }}
+          configMap:
+            name: {{ .Values.promtail.name }}-config
+        - name: {{ .Values.promtail.logsVolume }}
+          hostPath:
+            path: /var/log
+        - name: {{ .Values.promtail.containersVolume }}
+          hostPath:
+            path: /var/lib/docker/containers
+            type: Directory

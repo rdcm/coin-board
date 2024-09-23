@@ -26,13 +26,13 @@ pub struct RatesResponse {
 }
 
 impl CurrencyRate {
-    fn to_model(&self) -> CurrencyRateModel {
+    fn into_model(self) -> CurrencyRateModel {
         CurrencyRateModel {
-            id: self._id.id.clone(),
-            symbol: self._id.symbol.clone(),
-            name: self._id.name.clone(),
-            image: self.image.clone(),
-            last_updated: self.last_updated.clone(),
+            id: self._id.id,
+            symbol: self._id.symbol,
+            name: self._id.name,
+            image: self.image,
+            last_updated: self.last_updated,
             current_price: self.current_price,
             high_24h: self.high_24h,
             low_24h: self.low_24h,
@@ -44,7 +44,7 @@ impl CurrencyRate {
 
 impl RatesResponse {
     pub fn from_currency_rates(rates: Vec<CurrencyRate>) -> Self {
-        let rates_models = rates.iter().map(|m| m.to_model()).collect();
+        let rates_models = rates.into_iter().map(|m| m.into_model()).collect();
 
         RatesResponse {
             rates: rates_models,

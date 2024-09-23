@@ -75,15 +75,15 @@ impl RatesProvider for RatesProviderImpl {
             .context("[rates-exporter] [coin-gecko-api] Response deserialization failed")?;
 
         let rates: Vec<CurrencyRate> = exported_rates
-            .iter()
+            .into_iter()
             .map(move |cgcr| CurrencyRate {
                 _id: Key {
-                    id: cgcr.id.clone(),
-                    name: cgcr.name.clone(),
-                    symbol: cgcr.symbol.clone(),
+                    id: cgcr.id,
+                    name: cgcr.name,
+                    symbol: cgcr.symbol,
                 },
-                image: cgcr.image.clone(),
-                last_updated: cgcr.last_updated.clone(),
+                image: cgcr.image,
+                last_updated: cgcr.last_updated,
                 current_price: cgcr.current_price,
                 high_24h: cgcr.high_24h,
                 low_24h: cgcr.low_24h,

@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse},
     web::Data,

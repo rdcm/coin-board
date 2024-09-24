@@ -29,9 +29,9 @@ impl Service {
         Ok(Service { handler, settings })
     }
 
-    pub async fn run(&self) -> Result<()> {
+    pub async fn run(self) -> Result<()> {
         let query = FetchDataQuery {
-            coins_ids: self.settings.provider.coins.clone(),
+            coins_ids: self.settings.provider.coins,
         };
 
         self.handler.handle(&query).await?;

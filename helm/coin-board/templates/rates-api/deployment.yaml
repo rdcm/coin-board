@@ -28,6 +28,9 @@ spec:
             - configMapRef:
                 name: {{ .Values.api.name }}-config
           resources:
+            requests:
+              memory: {{ .Values.api.resources.requests.memory }}
+              cpu: {{ .Values.api.resources.requests.cpu }}
             limits:
               memory: {{ .Values.api.resources.limits.memory }}
               cpu: {{ .Values.api.resources.limits.cpu }}

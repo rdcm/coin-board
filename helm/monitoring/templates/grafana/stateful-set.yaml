@@ -14,6 +14,9 @@ spec:
       labels:
         app: {{ .Values.grafana.name }}
     spec:
+      securityContext:
+        runAsUser: 472
+        fsGroup: 472
       containers:
         - name: {{ .Values.grafana.name }}
           image: "{{ .Values.grafana.image.name }}:{{ .Values.grafana.image.tag }}"
@@ -29,6 +32,13 @@ spec:
               mountPath: /etc/grafana/provisioning/dashboards
             - name: {{ .Values.grafana.name }}-datasources
               mountPath: /etc/grafana/provisioning/datasources
+          resources:
+            requests:
+              memory: {{ .Values.grafana.resources.requests.memory }}
+              cpu: {{ .Values.grafana.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.grafana.resources.limits.memory }}
+              cpu: {{ .Values.grafana.resources.limits.cpu }}
       volumes:
         - name: {{ .Values.grafana.name }}-storage
           persistentVolumeClaim:
@@ -44,7 +54,7 @@ spec:
         name: {{ .Values.grafana.name }}-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: {{ .Values.grafana.storageClassName }}
+        storageClassName: {{ .Values.storageClassName }}
         resources:
           requests:
             storage: {{ .Values.grafana.storageCapacity }}

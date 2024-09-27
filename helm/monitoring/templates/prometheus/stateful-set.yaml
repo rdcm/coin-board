@@ -15,6 +15,9 @@ spec:
         app: {{ .Values.prometheus.name }}
     spec:
       serviceAccountName: {{ .Values.prometheus.name }}-service-account
+      securityContext:
+        runAsUser: 472
+        fsGroup: 472
       containers:
         - name: {{ .Values.prometheus.name }}
           image: "{{ .Values.prometheus.image.name }}:{{ .Values.prometheus.image.tag }}"
@@ -31,6 +34,13 @@ spec:
             - name: prometheus-config
               mountPath: /etc/prometheus
               readOnly: true
+          resources:
+            requests:
+              memory: {{ .Values.prometheus.resources.requests.memory }}
+              cpu: {{ .Values.prometheus.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.prometheus.resources.limits.memory }}
+              cpu: {{ .Values.prometheus.resources.limits.cpu }}
       volumes:
         - name: {{ .Values.prometheus.name }}-config
           configMap:
@@ -43,4 +53,4 @@ spec:
         resources:
           requests:
             storage: {{ .Values.prometheus.storageCapacity }}
-        storageClassName: {{ .Values.prometheus.storageClassName }}
+        storageClassName: {{ .Values.storageClassName }}

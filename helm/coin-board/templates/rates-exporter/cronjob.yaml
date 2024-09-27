@@ -17,6 +17,13 @@ spec:
           containers:
             - name: {{ .Values.exporter.name }}
               image: "{{ .Values.exporter.image.name }}:{{ .Values.exporter.image.tag }}"
+              resources:
+                requests:
+                  memory: {{ .Values.exporter.resources.requests.memory }}
+                  cpu: {{ .Values.exporter.resources.requests.cpu }}
+                limits:
+                  memory: {{ .Values.exporter.resources.limits.memory }}
+                  cpu: {{ .Values.exporter.resources.limits.cpu }}
               envFrom:
                 - configMapRef:
                     name: {{ .Values.exporter.name }}-config

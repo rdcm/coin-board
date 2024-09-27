@@ -12,9 +12,12 @@ ui:
     name: ghcr.io/rdcm/coin-board-ui/coin-board-ui
     tag: v1.0.3
   resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "512Mi"
-      cpu: "250m"
+      memory: "256Mi"
+      cpu: "100m"
 
 mongodb:
   name: mongodb
@@ -26,11 +29,11 @@ mongodb:
     tag: latest
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "250m"
+      memory: "128Mi"
+      cpu: "50m"
     limits:
-      memory: "512Mi"
-      cpu: "500m"
+      memory: "256Mi"
+      cpu: "100m"
   volume:
     capacity: 1000Mi
 
@@ -48,15 +51,18 @@ exporter:
   concurrencyPolicy: Forbid
   replicas: 1
   weight: 3
-  logLevel: error
+  logLevel: info
   image:
     name: ghcr.io/rdcm/coin-board/rates-exporter
-    tag: v1.0.3
+    tag: v1.0.4
   pullPolicy: Never
   resources:
-    limits:
+    requests:
       memory: "128Mi"
       cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "100m"
 
 api:
   name: rates-api
@@ -65,17 +71,20 @@ api:
   host: 0.0.0.0
   externalPort: 80
   internalPort: 7373
-  logLevel: error
+  logLevel: info
   metrics:
     host: 0.0.0.0
     port: 5000
   image:
     name: ghcr.io/rdcm/coin-board/rates-api
-    tag: v1.0.3
+    tag: v1.0.4
   resources:
-    limits:
+    requests:
       memory: "128Mi"
       cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "100m"
   ingress:
     ingressClassName: nginx
   mongodb:

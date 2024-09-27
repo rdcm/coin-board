@@ -17,9 +17,11 @@ pub struct Metrics {
 
 impl Metrics {
     pub fn new() -> Result<Self> {
-        let request_count =
-            register_counter!("request_count", "Total number of HTTP requests made.")
-                .context("[rates-api] [prometheus] Failed to register 'request_count' metric")?;
+        let request_count = register_counter!(
+            "request_count",
+            "Total number of HTTP requests made."
+        )
+        .context("[rates-api] [prometheus] Failed to register 'request_count' metric")?;
 
         let request_duration = register_histogram!(
             "request_duration_seconds",
@@ -41,7 +43,10 @@ pub async fn get_metrics_handler(_: Data<Arc<Metrics>>) -> Result<HttpResponse, 
     let metric_families = prometheus::gather();
 
     encoder.encode(&metric_families, &mut buffer).map_err(|e| {
-        error!("[rates-api] [prometheus] Metrics encoding error: {}", e);
+        error!(
+            "[rates-api] [prometheus] Metrics encoding error: {}",
+            e
+        );
         actix_web::error::ErrorInternalServerError(e)
     })?;
 

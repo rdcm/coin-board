@@ -29,11 +29,14 @@ impl Service {
         let client = MongoClient::with_options(client_options)
             .context("[rates-api] [mongodb] Failed create mongodb client")?;
 
-        let rates_repository =
-            Arc::new(RatesRepositoryImpl::new(client, &settings.database.db_name));
+        let rates_repository = Arc::new(RatesRepositoryImpl::new(
+            client,
+            &settings.database.db_name,
+        ));
 
-        let handler: Arc<dyn GetRatesQueryHandler> =
-            Arc::new(GetRatesQueryHandlerImpl::new(rates_repository.clone()));
+        let handler: Arc<dyn GetRatesQueryHandler> = Arc::new(GetRatesQueryHandlerImpl::new(
+            rates_repository.clone(),
+        ));
 
         let api_addr = settings.endpoints.get_api_address();
         let api_server = HttpServer::new({

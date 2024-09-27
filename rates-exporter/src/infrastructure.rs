@@ -50,7 +50,10 @@ impl RatesProvider for RatesProviderImpl {
         let resp = client
             .get(&self.uri)
             .query(&query)
-            .header("User-Agent", HeaderValue::from_static("Mozilla/5.0"))
+            .header(
+                "User-Agent",
+                HeaderValue::from_static("Mozilla/5.0"),
+            )
             .send()
             .await
             .context("[rates-exporter] [coin-gecko-api] Fetch currency rates failed")?;

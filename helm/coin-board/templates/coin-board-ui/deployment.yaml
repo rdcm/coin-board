@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.ui.label }}-deployment
+  name: {{ .Values.ui.name }}-deployment
   annotations:
     "helm.sh/hook-weight": "{{ .Values.ui.weight }}"
 spec:
   replicas: {{ .Values.ui.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.ui.label }}
+      app: {{ .Values.ui.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.ui.label }}
+        app: {{ .Values.ui.name }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets }}
       containers:
-        - name: {{ .Values.ui.label }}
+        - name: {{ .Values.ui.name }}
           image: "{{ .Values.ui.image.name }}:{{ .Values.ui.image.tag }}"
           envFrom:
             - configMapRef:
-                name: {{ .Values.ui.label }}-config
+                name: {{ .Values.ui.name }}-config
           resources:
             limits:
               memory: {{ .Values.ui.resources.limits.memory }}

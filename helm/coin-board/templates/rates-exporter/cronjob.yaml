@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.exporter.label }}-cronjob
+  name: {{ .Values.exporter.name }}-cronjob
 spec:
   schedule: "{{ .Values.exporter.expression }}"
   failedJobsHistoryLimit: {{ .Values.exporter.failedJobsHistoryLimit }}
@@ -15,9 +15,9 @@ spec:
           imagePullSecrets:
             - name: {{ .Values.imagePullSecrets }}
           containers:
-            - name: {{ .Values.exporter.label }}
+            - name: {{ .Values.exporter.name }}
               image: "{{ .Values.exporter.image.name }}:{{ .Values.exporter.image.tag }}"
               envFrom:
                 - configMapRef:
-                    name: {{ .Values.exporter.label }}-config
+                    name: {{ .Values.exporter.name }}-config
           restartPolicy: OnFailure

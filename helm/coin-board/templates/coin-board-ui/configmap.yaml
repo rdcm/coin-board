@@ -2,8 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.ui.label }}-config
+  name: {{ .Values.ui.name }}-config
   labels:
-    app: {{ .Values.ui.label }}
+    app: {{ .Values.ui.name }}
 data:
   COIN_BOARD_UI_API_URL: "{{ .Values.ui.backendUri }}"

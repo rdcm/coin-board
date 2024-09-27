@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.api.label }}-deployment
+  name: {{ .Values.api.name }}-deployment
   annotations:
     "helm.sh/hook-weight": "{{ .Values.api.weight }}"
 spec:
   replicas: {{ .Values.api.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.api.label }}
+      app: {{ .Values.api.name }}
   template:
     metadata:
       annotations:
@@ -17,16 +17,16 @@ spec:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "5000"
       labels:
-        app: {{ .Values.api.label }}
+        app: {{ .Values.api.name }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets }}
       containers:
-        - name: {{ .Values.api.label }}
+        - name: {{ .Values.api.name }}
           image: "{{ .Values.api.image.name }}:{{ .Values.api.image.tag }}"
           envFrom:
             - configMapRef:
-                name: {{ .Values.api.label }}-config
+                name: {{ .Values.api.name }}-config
           resources:
             limits:
               memory: {{ .Values.api.resources.limits.memory }}

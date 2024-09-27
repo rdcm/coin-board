@@ -2,13 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.mongodb.label }}-service
+  name: {{ .Values.mongodb.name }}-service
   labels:
-    app: {{ .Values.mongodb.label }}
+    app: {{ .Values.mongodb.name }}
 spec:
   ports:
     - port: {{ .Values.mongodb.port }}
       targetPort: {{ .Values.mongodb.port }}
   selector:
-    app: {{ .Values.mongodb.label }}
+    app: {{ .Values.mongodb.name }}
   clusterIP: None  # Headless service for StatefulSet

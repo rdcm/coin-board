@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.mongodb.label }}-stateful-set
+  name: {{ .Values.mongodb.name }}-stateful-set
   labels:
-    app: {{ .Values.mongodb.label }}
+    app: {{ .Values.mongodb.name }}
 spec:
   serviceName: "mongodb"
   replicas: 1  # Start with 1 replica, can be scaled up later
   selector:
     matchLabels:
-      app: {{ .Values.mongodb.label }}
+      app: {{ .Values.mongodb.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.mongodb.label }}
+        app: {{ .Values.mongodb.name }}
     spec:
       containers:
-        - name: {{ .Values.mongodb.label }}
+        - name: {{ .Values.mongodb.name }}
           image: "{{ .Values.mongodb.image.name }}:{{ .Values.mongodb.image.tag }}"
           ports:
             - containerPort: {{ .Values.mongodb.port }}
           volumeMounts:
-            - name: {{ .Values.mongodb.label }}-data
+            - name: {{ .Values.mongodb.name }}-data
               mountPath: /data/db
           resources:
             requests:
@@ -33,7 +33,7 @@ spec:
               cpu: {{ .Values.mongodb.resources.limits.cpu }}
   volumeClaimTemplates:
     - metadata:
-        name: {{ .Values.mongodb.label }}-data
+        name: {{ .Values.mongodb.name }}-data
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:

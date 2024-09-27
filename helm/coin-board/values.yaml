@@ -7,7 +7,7 @@ ui:
   internalPort: 3000
   replicas: 1
   weight: 4
-  label: coin-board-ui
+  name: coin-board-ui
   image:
     name: ghcr.io/rdcm/coin-board-ui/coin-board-ui
     tag: v1.0.3
@@ -17,7 +17,7 @@ ui:
       cpu: "250m"
 
 mongodb:
-  label: mongodb
+  name: mongodb
   replicas: 1
   weight: 2
   port: 27017
@@ -41,7 +41,7 @@ exporter:
   provider:
     uri: https://api.coingecko.com/api/v3/coins/markets
     coins: bitcoin,ethereum,solana,dogecoin,the-open-network,binancecoin,ripple,pepe,sun-token,litecoin,shiba-inu,nyan-meme-coin
-  label: rates-exporter
+  name: rates-exporter
   expression: "*/5 * * * *" # every 5 minutes
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
@@ -59,7 +59,7 @@ exporter:
       cpu: "50m"
 
 api:
-  label: rates-api
+  name: rates-api
   replicas: 1
   weight: 4
   host: 0.0.0.0

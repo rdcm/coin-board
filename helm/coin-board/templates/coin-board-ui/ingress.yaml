@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.ui.label }}-ingress
+  name: {{ .Values.ui.name }}-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -13,7 +13,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.ui.ingress.host }}
-      secretName: {{ .Values.ui.label }}-tls
+      secretName: {{ .Values.ui.name }}-tls
   rules:
     - host: {{ .Values.ui.ingress.host }}
       http:
@@ -22,7 +22,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Values.ui.label }}-service
+                name: {{ .Values.ui.name }}-service
                 port:
                   number: 80
 {{- end }}
